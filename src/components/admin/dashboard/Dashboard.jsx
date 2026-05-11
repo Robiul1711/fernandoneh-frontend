@@ -7,7 +7,7 @@ import AIAnalysis from './AIAnalysis';
 
 // Import the generated bot image
 import BotImage from '@/assets/images/winingnumber.png';
-import PowerballLogo from '@/assets/images/Powerball.png';
+import PowerballLogo from '@/assets/images/powerball.png';
 import MegaMillionsLogo from '@/assets/images/megamillion.png';
 
 const Dashboard = () => {
