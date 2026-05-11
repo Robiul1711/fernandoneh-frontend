@@ -3,9 +3,19 @@ import SideBar from "@/pages/admin/SideBar";
 
 import React, { useEffect, useState } from "react";
 import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
-import { MdDashboard } from "react-icons/md";
-import { CgProfile } from "react-icons/cg";
+import { 
+  Home, 
+  Sparkles, 
+  BarChart2, 
+  Brain, 
+  LayoutGrid, 
+  Bookmark, 
+  Library, 
+  Settings,
+  ShieldCheck
+} from "lucide-react";
 import { useUserProfile } from "@/hooks/fetchUserProfile";
+
 const AdminLayout = () => {
   useUserProfile();
   const [Open, setOpen] = useState(false);
@@ -13,33 +23,53 @@ const AdminLayout = () => {
   const sideBar = [
     {
       id: 1,
-      icon: <MdDashboard />,
+      icon: <Home size={20} />,
       text: "Dashboard",
-      path: "/dashboard", // main path (optional, if you still want to keep it)
-      activePaths: [
-        "/dashboard",
-        "/dashboard/settings",
-        "/dashboard/analytics",
-      ], // all paths that should make this item active
-      sublink: false,
+      path: "/dashboard",
     },
     {
       id: 2,
-      icon: <MdDashboard />,
-      text: "Admin Management",
-      path: "/dashboard/admin-list",
-      sublink: [
-        {
-          id: 1,
-          text: "Admin List",
-          path: "/dashboard/admin-list",
-        },
-        {
-          id: 1,
-          text: "Add New Admin",
-          path: "/dashboard/asdasd",
-        },
-      ],
+      icon: <Sparkles size={20} />,
+      text: "Generate Picks",
+      path: "/dashboard/generate-picks",
+    },
+    {
+      id: 3,
+      icon: <BarChart2 size={20} />,
+      text: "Past Results",
+      path: "/dashboard/past-results",
+    },
+    {
+      id: 4,
+      icon: <Brain size={20} />,
+      text: "AI Analysis",
+      path: "/dashboard/ai-analysis",
+    },
+    { type: 'divider' },
+    {
+      id: 5,
+      icon: <LayoutGrid size={20} />,
+      text: "Lottery Games",
+      path: "/dashboard/lottery-games",
+    },
+    {
+      id: 6,
+      icon: <Bookmark size={20} />,
+      text: "My Lottery",
+      path: "/dashboard/my-lottery",
+    },
+    {
+      id: 7,
+      icon: <Library size={20} />,
+      text: "Lottery Intelligence Library",
+      path: "/dashboard/intelligence-library",
+    },
+    { type: 'divider' },
+    {
+      id: 8,
+      icon: <Settings size={20} />,
+      text: "Settings",
+      path: "/dashboard/settings",
     },
   ];
   const location = useLocation();
@@ -52,10 +82,10 @@ const AdminLayout = () => {
   return (
     <>
       <ScrollRestoration />
-      <div className="flex  h-screen min-h-screen w-full">
+      <div className="flex  h-screen min-h-screen w-full bg-[#0D0D0D]">
         <SideBar open={Open} setOpen={setOpen} sidebar={sideBar} />
-        <div className="flex-1 bg-dark text-white flex flex-col overflow-auto custom-scrollbar">
-          <div className=" flex flex-col lg:gap-10 gap-5 lg:py-6 py-3 lg:px-[30px] px-2.5 sm:px-5">
+        <div className="flex-1  text-white flex flex-col overflow-auto custom-scrollbar">
+          <div className=" flex flex-col gap-5 ">
             <CommonNavbar open={Open} setOpen={setOpen} />
             <Outlet />
           </div>
