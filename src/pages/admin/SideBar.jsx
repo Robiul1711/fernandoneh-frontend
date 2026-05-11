@@ -1,152 +1,101 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { MdKeyboardArrowDown } from "react-icons/md";
-import { IoLogOutOutline } from "react-icons/io5";
-import { FaReact } from "react-icons/fa6";
+import { ShieldCheck, Menu, X } from "lucide-react";
+import Logo from "../../assets/images/logo.png";
+
 const SideBar = ({ sidebar, open, setOpen }) => {
   const location = useLocation();
-  const [activeParentIndex, setActiveParentIndex] = useState(null);
 
-  useEffect(() => {
-    sidebar.forEach((item, index) => {
-      if (item.sublink) {
-        const activeSub = item.sublink.find(
-          (sub) => sub.path === location.pathname
-        );
-        if (activeSub) {
-          setActiveParentIndex(index);
-        }
-      }
-    });
-  }, [location.pathname, sidebar]);
-
-  const isActive = (paths) => {
-    if (!paths) return false;
-    const pathArray = Array.isArray(paths) ? paths : [paths];
-    return pathArray.includes(location.pathname);
-  };
-
-  const isParentActive = (item) => {
-    if (!item.sublink) return isActive(item.path);
-    return item.sublink.some((sub) => isActive(sub.path));
-  };
-
-  const toggleSubmenu = (index) => {
-    setActiveParentIndex((prev) => (prev === index ? null : index));
+  const isActive = (path) => {
+    return location.pathname === path;
   };
 
   return (
     <>
-      {/* Overlay */}
+      {/* Mobile Menu Button */}
+      <button
+        className="xl:hidden fixed top-4 left-4 z-[250] p-2 bg-[#1A1A1A] rounded-lg text-white"
+        onClick={() => setOpen(!open)}
+      >
+        {open ? <X size={24} /> : <Menu size={24} />}
+      </button>
+
+      {/* Overlay for mobile */}
       <div
-        className={`fixed inset-0 bg-black/30 backdrop-blur-sm transition-all duration-300 ease-in-out ${
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 xl:hidden z-[200] ${
           open ? "opacity-100 visible" : "opacity-0 invisible"
-        } xl:hidden z-50`}
+        }`}
         onClick={() => setOpen(false)}
       ></div>
 
-      {/* Sidebar */}
-      <div
-        className={`h-full py-6 ${
-          open
-            ? "left-0 top-0 w-[320px] z-[220] shadow-lg bg-[#1F3C37] overflow-y-auto"
-            : "-left-full xl:w-[350px] w-[320px]"
-        }
-        bg-[#ddd] backdrop-blur-md lg:px-8 px-4 flex flex-col gap-8 shadow-md xlg:static fixed transition-all duration-300`}
+      {/* Sidebar Container */}
+      <aside
+        className={`fixed xl:static top-0 left-0 h-screen w-80 bg-[#0D0D0D] border-r border-[#1A1A1A] flex flex-col transition-transform duration-300 z-[210] ${
+          open ? "translate-x-0" : "-translate-x-full xl:translate-x-0"
+        }`}
       >
-        {/* Logo */}
-        <Link to={"/"}>
-          <div className="flex justify-center items-center">
-            {/* <img src={} alt="Safe" className="h-24 object-contain" /> */}
-            <span>
-              <FaReact size={40} color=" black" />
-            </span>
-          </div>
-        </Link>
+        {/* Logo Section */}
+        <div className="p-8 flex flex-col items-center text-center">
+          <Link to="/" className="flex flex-col items-center">
+            <img
+              src={Logo}
+              alt="AI Lottery App Logo"
+              className="w-24 xl:w-28 h-auto"
+            />
+          </Link>
+        </div>
 
-        {/* Navigation */}
-        <div className="flex flex-col gap-3">
-          {sidebar?.map((item, index) => {
-            const parentActive = isParentActive(item);
-            return !item?.sublink ? (
-              <Link
-                key={index}
-                to={item?.path}
-                onClick={() => {
-                  setActiveParentIndex(null);
-                  setOpen(false);
-                }}
-                className={`flex items-center gap-3 px-4 py-2 rounded-lg text-base font-medium transition-colors duration-200 ${
-                  isActive(item?.activePaths)
-                    ? "bg-[#FFF] text-[#3F6534]"
-                    : "text-[#FFF] hover:bg-[#466b55] hover:text-[#ffffff]"
-                }`}
-              >
-                <span className="text-lg">{item?.icon}</span>
-                {item?.text}
-              </Link>
-            ) : (
-              <div className="relative" key={index}>
-                {/* Parent link */}
-                <div
-                  className={`flex items-center justify-between px-4 py-2 cursor-pointer w-full rounded-lg transition-all duration-200 ${
-                    parentActive
-                      ? "bg-[#253E8E] text-white"
-                      : "text-gray-700 hover:bg-[#E3ECFF] hover:text-[#253E8E]"
-                  }`}
-                  onClick={() => toggleSubmenu(index)}
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-lg">{item?.icon}</span>
-                    <p className="font-medium">{item?.text}</p>
-                  </div>
-                  <span
-                    className={`transform transition-transform duration-300 ${
-                      activeParentIndex === index ? "rotate-180" : "rotate-0"
+        {/* Navigation Menu */}
+        <nav className="flex-1 px-4 py-2 overflow-y-auto custom-scrollbar">
+          <ul className="space-y-1">
+            {sidebar.map((item, index) => {
+              if (item.type === 'divider') {
+                return (
+                  <li key={`divider-${index}`} className="py-4 px-4">
+                    <div className="h-[1px] bg-[#1A1A1A] w-full"></div>
+                  </li>
+                );
+              }
+
+              const active = isActive(item.path);
+
+              return (
+                <li key={item.id || index}>
+                  <Link
+                    to={item.path}
+                    onClick={() => setOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
+                      active
+                        ? "bg-[#1B7D31] text-white"
+                        : "text-[#A1A1A1] hover:bg-[#1A1A1A] hover:text-white"
                     }`}
                   >
-                    <MdKeyboardArrowDown size={20} />
-                  </span>
-                </div>
+                    <span className={`transition-colors ${active ? "text-white" : "text-[#A1A1A1] group-hover:text-white"}`}>
+                      {item.icon}
+                    </span>
+                    <span className="text-sm font-medium">{item.text}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
 
-                {/* Sublinks dropdown */}
-                <div
-                  className={`transition-all duration-300 ease-in-out overflow-hidden px-4 bg-white rounded-lg ${
-                    activeParentIndex === index
-                      ? "max-h-[500px] py-4 opacity-100 translate-y-0"
-                      : "max-h-0 opacity-0 -translate-y-2"
-                  }`}
-                >
-                  <div className="flex flex-col gap-1">
-                    {item?.sublink?.map((value, subIndex) => (
-                      <Link
-                        key={subIndex}
-                        to={value?.path}
-                        className={`block px-4 py-2 rounded-md transition-colors duration-200 ${
-                          isActive(item?.activePaths)
-                            ? "text-black font-medium bg-[#F0F4FF]"
-                            : "text-[#5A5C5F] font-normal hover:bg-[#F0F4FF]"
-                        }`}
-                        onClick={() => setOpen(false)}
-                      >
-                        {value?.text}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-
-          {/* Logout */}
-          <div className="flex absolute bottom-6 w-[80%] items-center gap-3  cursor-pointer  transition  rounded-lg px-4 py-2">
-            <span>
-              <IoLogOutOutline color="black" />
-            </span>
-            <p className="font-medium ">Log Out</p>
+        {/* Security Box */}
+        <div className="p-4 mt-auto">
+          <div className="bg-[#1A1A1A]/40 border border-[#1B7D31]/20 rounded-2xl p-5 flex items-start gap-4">
+            <div className="bg-[#1B7D31]/10 p-2 rounded-xl">
+              <ShieldCheck className="text-[#1B7D31]" size={24} />
+            </div>
+            <div>
+              <h4 className="text-[#1B7D31] text-xs font-bold uppercase tracking-wider mb-1">Secure & Private</h4>
+              <p className="text-[#A1A1A1] text-[10px] leading-relaxed">
+                Your data is always safe and never shared
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      </aside>
     </>
   );
 };
