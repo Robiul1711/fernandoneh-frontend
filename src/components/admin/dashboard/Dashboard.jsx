@@ -1,9 +1,11 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { ChevronRight, ShieldCheck } from 'lucide-react';
 import JackpotCard from './JackpotCard';
 import AIBanner from './AIBanner';
 import GeneratedNumbers from './GeneratedNumbers';
 import AIAnalysis from './AIAnalysis';
+import MoreGames from './MoreGames';
 
 // Import the generated bot image
 import BotImage from '@/assets/images/winingnumber.png';
@@ -14,7 +16,7 @@ const Dashboard = () => {
   const topGames = [
     {
       title: "Powerball",
-      logo: PowerballLogo, // Mocked text logo
+      logo: PowerballLogo, 
       winningNumbers: [7, 12, 23, 31, 2],
       jackpot: 87,
       drawCloses: "Tomorrow, 09:59 PM ET",
@@ -40,63 +42,64 @@ const Dashboard = () => {
     }
   ];
 
-  const moreGames = [
-    { title: "MASS CASH", jackpot: 87 },
-    { title: "FLORIDA LOTTERY", jackpot: 87 },
-    { title: "FANTASY 5", jackpot: 87 },
-    { title: "THE NUMBERS GAME", jackpot: 87 }
-  ];
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15
+      }
+    }
+  };
 
   return (
-    <div className="p-6 space-y-8 bg-[#0D0D0D] min-h-screen">
+    <motion.div 
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+      className="p-4 md:p-6 space-y-6 md:space-y-8 bg-[#0D0D0D] min-h-screen"
+    >
       {/* Top Section: Main Jackpot Cards */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <motion.div variants={itemVariants} className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {topGames.map((game, i) => (
           <JackpotCard key={i} {...game} />
         ))}
-      </div>
+      </motion.div>
 
       {/* AI Banner Section */}
-      <AIBanner botImage={BotImage} />
+      <motion.div variants={itemVariants}>
+        <AIBanner botImage={BotImage} />
+      </motion.div>
 
       {/* Middle Section: Numbers & Analysis */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        <GeneratedNumbers logo="POWERBALL" />
+      <motion.div variants={itemVariants} className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <GeneratedNumbers logo={PowerballLogo} />
         <AIAnalysis />
-      </div>
+      </motion.div>
 
       {/* Bottom Section: More Games */}
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h3 className="text-white text-xl font-bold">More games to play</h3>
-          <button className="flex items-center gap-1 text-[#A1A1A1] hover:text-white transition-colors text-sm font-medium">
-            <span>View All Lotteries</span>
-            <ChevronRight size={16} />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {moreGames.map((game, i) => (
-            <JackpotCard 
-              key={i} 
-              title={game.title}
-              logo={game.title}
-              winningNumbers={[7, 12, 23, 31, 2]}
-              jackpot={game.jackpot}
-              drawCloses="Tomorrow, 09:59 PM ET"
-              nextDrawing="Tomorrow, 10:59 PM ET"
-              timer={[
-                { label: "HRS", value: "21" },
-                { label: "MINS", value: "45" },
-                { label: "SECS", value: "32" }
-              ]}
-            />
-          ))}
-        </div>
-      </div>
+      <motion.div variants={itemVariants}>
+        <MoreGames />
+      </motion.div>
 
       {/* Footer Meta */}
-      <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-[#1A1A1A] gap-4">
+      <motion.div 
+        variants={itemVariants}
+        className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-[#1A1A1A] gap-4"
+      >
         <p className="text-[#A1A1A1] text-[10px]">
           Lottery games are based on chance. Play responsibly.
         </p>
@@ -104,8 +107,8 @@ const Dashboard = () => {
           <ShieldCheck size={14} />
           <span>Data provided by official lottery sources.</span>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

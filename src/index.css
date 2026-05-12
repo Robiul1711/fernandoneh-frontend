@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
+
 @import "tailwindcss";
 
 @import "tw-animate-css";
@@ -12,8 +13,11 @@
 
   /* color */
 
-  --color-Primary: green;
-  --color-bg-custom: linear-gradient(red, yellow);
+  --color-Green: #83ED59;
+  --color-Primary: #F6E7B7;
+  --color-Secondary: #FBC311;
+
+  --color-bg-custom: linear-gradient(90deg,_#F2DC94_0%,_#FFF2D7_43%,_#FFC15D_100%);
 
   /* breakpoint */
   --breakpoint-xxs: 390px;
@@ -219,4 +223,30 @@
 
 .bg-custom {
   background: var(--color-bg-custom);
+}
+
+/* Custom Thin Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0D0D0D;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1A1A1A;
+  border-radius: 10px;
+  border: 1px solid #333333;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #E8AC43;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1A1A1A #0D0D0D;
 }
