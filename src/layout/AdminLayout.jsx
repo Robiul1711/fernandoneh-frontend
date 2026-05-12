@@ -39,34 +39,29 @@ const AdminLayout = () => {
       text: "Past Results",
       path: "/dashboard/past-results",
     },
-    {
-      id: 4,
-      icon: <Brain size={20} />,
-      text: "AI Analysis",
-      path: "/dashboard/ai-analysis",
-    },
+
     { type: 'divider' },
     {
-      id: 5,
+      id: 4,
       icon: <LayoutGrid size={20} />,
       text: "Lottery Games",
       path: "/dashboard/lottery-games",
     },
     {
-      id: 6,
+      id: 5,
       icon: <Bookmark size={20} />,
       text: "My Lottery",
       path: "/dashboard/my-lottery",
     },
     {
-      id: 7,
+      id: 6,
       icon: <Library size={20} />,
       text: "Lottery Intelligence Library",
       path: "/dashboard/intelligence-library",
     },
     { type: 'divider' },
     {
-      id: 8,
+      id: 7,
       icon: <Settings size={20} />,
       text: "Settings",
       path: "/dashboard/settings",
@@ -85,7 +80,7 @@ const AdminLayout = () => {
       <div className="flex  h-screen min-h-screen w-full bg-[#0D0D0D]">
         <SideBar open={Open} setOpen={setOpen} sidebar={sideBar} />
         <div className="flex-1  text-white flex flex-col overflow-auto custom-scrollbar">
-          <div className=" flex flex-col gap-5 ">
+          <div className=" flex flex-col  ">
             <CommonNavbar open={Open} setOpen={setOpen} />
             <Outlet />
           </div>

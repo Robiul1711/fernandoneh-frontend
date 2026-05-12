@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, CheckCircle2 } from 'lucide-react'
 import { FcGoogle } from 'react-icons/fc'
 import Logo from '../../assets/images/logo.png'
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
+  const navigate = useNavigate()
   
   const {
     register,
@@ -26,6 +27,8 @@ const Login = () => {
 
   const onSubmit = (data) => {
     console.log('Login Data:', data)
+
+    navigate('/dashboard')
   }
 
   return (

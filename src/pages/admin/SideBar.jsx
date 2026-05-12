@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "motion/react";
 import { Link, useLocation } from "react-router-dom";
 import { ShieldCheck, Menu, X } from "lucide-react";
 import Logo from "../../assets/images/logo.png";
@@ -30,7 +31,7 @@ const SideBar = ({ sidebar, open, setOpen }) => {
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed xl:static top-0 left-0 h-screen w-80 bg-[#0D0D0D] border-r border-[#1A1A1A] flex flex-col transition-transform duration-300 z-[210] ${
+        className={`fixed xl:static top-0 left-0 h-screen w-80 bg-[#0D0D0D] border-r border-Primary/20 flex flex-col transition-transform duration-300 z-[210] ${
           open ? "translate-x-0" : "-translate-x-full xl:translate-x-0"
         }`}
       >
@@ -40,7 +41,7 @@ const SideBar = ({ sidebar, open, setOpen }) => {
             <img
               src={Logo}
               alt="AI Lottery App Logo"
-              className="w-24 xl:w-28 h-auto"
+              className="w-24 xl:w-32 h-auto"
             />
           </Link>
         </div>
@@ -57,25 +58,35 @@ const SideBar = ({ sidebar, open, setOpen }) => {
                 );
               }
 
-              const active = isActive(item.path);
-
+              const isActive = location.pathname === item.path;
               return (
-                <li key={item.id || index}>
+                <motion.li 
+                  key={item.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
                   <Link
                     to={item.path}
                     onClick={() => setOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
-                      active
-                        ? "bg-[#1B7D31] text-white"
+                    className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 group ${
+                      isActive
+                        ? "bg-[#E8AC43]/10 text-[#E8AC43]"
                         : "text-[#A1A1A1] hover:bg-[#1A1A1A] hover:text-white"
                     }`}
                   >
-                    <span className={`transition-colors ${active ? "text-white" : "text-[#A1A1A1] group-hover:text-white"}`}>
+                    <div className={`${isActive ? "text-[#E8AC43]" : "text-[#A1A1A1] group-hover:text-[#E8AC43]"} transition-colors`}>
                       {item.icon}
-                    </span>
-                    <span className="text-sm font-medium">{item.text}</span>
+                    </div>
+                    <span className="text-sm font-bold tracking-wide">{item.text}</span>
+                    {isActive && (
+                      <motion.div 
+                        layoutId="active-indicator"
+                        className="ml-auto w-1.5 h-1.5 rounded-full bg-[#E8AC43] shadow-[0_0_10px_#E8AC43]"
+                      />
+                    )}
                   </Link>
-                </li>
+                </motion.li>
               );
             })}
           </ul>
