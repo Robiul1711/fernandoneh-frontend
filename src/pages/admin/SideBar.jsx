@@ -7,9 +7,6 @@ import Logo from "../../assets/images/logo.png";
 const SideBar = ({ sidebar, open, setOpen }) => {
   const location = useLocation();
 
-  const isActive = (path) => {
-    return location.pathname === path;
-  };
 
   return (
     <>
@@ -50,7 +47,7 @@ const SideBar = ({ sidebar, open, setOpen }) => {
         <nav className="flex-1 px-4 py-2 overflow-y-auto custom-scrollbar">
           <ul className="space-y-1">
             {sidebar.map((item, index) => {
-              if (item.type === 'divider') {
+              if (item.type === "divider") {
                 return (
                   <li key={`divider-${index}`} className="py-4 px-4">
                     <div className="h-[1px] bg-[#1A1A1A] w-full"></div>
@@ -58,9 +55,12 @@ const SideBar = ({ sidebar, open, setOpen }) => {
                 );
               }
 
-              const isActive = location.pathname === item.path;
+              const active = item.path === '/dashboard' 
+                ? location.pathname === '/dashboard' 
+                : location.pathname.startsWith(item.path);
+              
               return (
-                <motion.li 
+                <motion.li
                   key={item.id}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -70,17 +70,21 @@ const SideBar = ({ sidebar, open, setOpen }) => {
                     to={item.path}
                     onClick={() => setOpen(false)}
                     className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 group ${
-                      isActive
+                      active
                         ? "bg-[#E8AC43]/10 text-[#E8AC43]"
                         : "text-[#A1A1A1] hover:bg-[#1A1A1A] hover:text-white"
                     }`}
                   >
-                    <div className={`${isActive ? "text-[#E8AC43]" : "text-[#A1A1A1] group-hover:text-[#E8AC43]"} transition-colors`}>
+                    <div
+                      className={`${active ? "text-[#E8AC43]" : "text-[#A1A1A1] group-hover:text-[#E8AC43]"} transition-colors`}
+                    >
                       {item.icon}
                     </div>
-                    <span className="text-sm font-bold tracking-wide">{item.text}</span>
-                    {isActive && (
-                      <motion.div 
+                    <span className="text-sm font-bold tracking-wide">
+                      {item.text}
+                    </span>
+                    {active && (
+                      <motion.div
                         layoutId="active-indicator"
                         className="ml-auto w-1.5 h-1.5 rounded-full bg-[#E8AC43] shadow-[0_0_10px_#E8AC43]"
                       />
@@ -99,7 +103,9 @@ const SideBar = ({ sidebar, open, setOpen }) => {
               <ShieldCheck className="text-[#1B7D31]" size={24} />
             </div>
             <div>
-              <h4 className="text-[#1B7D31] text-xs font-bold uppercase tracking-wider mb-1">Secure & Private</h4>
+              <h4 className="text-[#1B7D31] text-xs font-bold uppercase tracking-wider mb-1">
+                Secure & Private
+              </h4>
               <p className="text-[#A1A1A1] text-[10px] leading-relaxed">
                 Your data is always safe and never shared
               </p>

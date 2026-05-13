@@ -163,7 +163,7 @@ const MyLottery = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 xlg:grid-cols-3 gap-6"
           >
             {savedTickets.map((ticket, i) => (
               <LotteryGameCard key={i} {...ticket} />

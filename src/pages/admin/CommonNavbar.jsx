@@ -11,6 +11,7 @@ import {
   ChevronRight,
   Menu
 } from "lucide-react";
+import LanguageArea from "@/components/common/LanguageArea";
 
 const CommonNavbar = ({ open, setOpen }) => {
   const [langOpen, setLangOpen] = useState(false);
@@ -37,10 +38,10 @@ const CommonNavbar = ({ open, setOpen }) => {
           <Sun className="text-[#E8AC43]" size={22} />
         </div>
         <div className="hidden sm:block">
-          <h2 className="text-white text-base md:text-lg font-bold flex items-center gap-2 leading-none mb-0.5 md:mb-1">
-            Good Morning, Kabir <span className="text-lg">👋</span>
+          <h2 className="text-white text-sm md:text-lg font-bold flex items-center gap-2 leading-none mb-0.5 md:mb-1">
+            Good Morning, Kabir <span className="text-base md:text-lg">👋</span>
           </h2>
-          <p className="text-[#A1A1A1] text-[10px] md:text-xs font-medium uppercase tracking-wider">Play Smarter With AI.</p>
+          <p className="text-[#A1A1A1] text-[9px] md:text-xs font-medium uppercase tracking-wider">Play Smarter With AI.</p>
         </div>
       </div>
 
@@ -54,36 +55,8 @@ const CommonNavbar = ({ open, setOpen }) => {
           </span>
         </button>
 
-        {/* Language Dropdown */}
-        <div className="relative">
-          <button 
-            onClick={() => {
-              setLangOpen(!langOpen);
-              setUserOpen(false);
-            }}
-            className="flex items-center gap-2 px-2 md:px-3 py-2 bg-[#1A1A1A] rounded-xl text-white text-xs md:text-sm font-medium hover:bg-[#262626] transition-all border border-transparent hover:border-[#333333]"
-          >
-            <Globe size={18} className="text-[#A1A1A1]" />
-            <span className="hidden xs:block">English</span>
-            <ChevronDown size={14} className={`text-[#A1A1A1] transition-transform ${langOpen ? 'rotate-180' : ''}`} />
-          </button>
-          
-          <AnimatePresence>
-            {langOpen && (
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                transition={{ duration: 0.2 }}
-                className="absolute top-full right-0 mt-2 w-40 bg-[#1A1A1A] border border-[#333333] rounded-xl shadow-2xl z-[300] overflow-hidden"
-              >
-                <button className="w-full text-left px-4 py-2 text-sm text-white hover:bg-[#262626] transition-colors">English</button>
-                <button className="w-full text-left px-4 py-2 text-sm text-[#A1A1A1] hover:bg-[#262626] transition-colors">Spanish</button>
-                <button className="w-full text-left px-4 py-2 text-sm text-[#A1A1A1] hover:bg-[#262626] transition-colors">French</button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+        {/* Language Selection */}
+        <LanguageArea />
 
         {/* User Profile Dropdown */}
         <div className="relative">

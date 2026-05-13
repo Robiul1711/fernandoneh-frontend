@@ -73,7 +73,7 @@ const Dashboard = () => {
       className="p-4 md:p-6 space-y-6 md:space-y-8 bg-[#0D0D0D] min-h-screen"
     >
       {/* Top Section: Main Jackpot Cards */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <motion.div variants={itemVariants} className="grid grid-cols-1 xlg:grid-cols-2 gap-6">
         {topGames.map((game, i) => (
           <JackpotCard key={i} {...game} />
         ))}
@@ -85,7 +85,7 @@ const Dashboard = () => {
       </motion.div>
 
       {/* Middle Section: Numbers & Analysis */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <motion.div variants={itemVariants} className="grid grid-cols-1 xlg:grid-cols-2 gap-6">
         <GeneratedNumbers logo={PowerballLogo} />
         <AIAnalysis />
       </motion.div>
