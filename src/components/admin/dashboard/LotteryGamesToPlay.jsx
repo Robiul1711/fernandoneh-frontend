@@ -16,14 +16,13 @@ import MassCashLogo from '@/assets/images/mashcash.png';
 import FloridaLotteryLogo from '@/assets/images/floridalottery.png';
 import Fantasy5Logo from '@/assets/images/fantasy.png';
 import NumbersGameLogo from '@/assets/images/numbergame.png';
-import { Link } from 'react-router-dom';
 
 const MoreGamesCard = ({ logo, title, winningNumbers, date, jackpot, drawCloses, nextDrawing, onClick }) => {
   return (
     <motion.div 
       onClick={onClick}
       whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
-      className="relative overflow-hidden bg-[#111111] border border-[#E8AC43]/30 rounded-[24px] p-5 md:p-6 transition-all duration-300 hover:border-[#E8AC43]/60 h-full cursor-pointer"
+      className="relative overflow-hidden bg-[#111111] border border-[#E8AC43]/30 rounded-[24px] p-6 transition-all duration-300 hover:border-[#E8AC43]/60 h-full cursor-pointer"
       style={{
         backgroundImage: `url(${pattern})`,
         backgroundSize: 'cover',
@@ -31,27 +30,27 @@ const MoreGamesCard = ({ logo, title, winningNumbers, date, jackpot, drawCloses,
       }}
     >
       {/* Top Row */}
-      <div className="flex justify-between items-start mb-6 md:mb-8">
+      <div className="flex justify-between items-start mb-8">
         <div className="flex-shrink-0">
-          <img src={logo} alt={title} className="h-8 md:h-14 w-auto object-contain" />
+          <img src={logo} alt={title} className="h-10 md:h-14 w-auto object-contain" />
         </div>
 
         <div className="flex flex-col items-end">
-          <div className="flex gap-1 mb-1.5 md:gap-1.5 md:mb-2">
+          <div className="flex gap-1.5 mb-2">
             {winningNumbers.map((num, i) => (
               <div
                 key={i}
-                className={`w-6 h-6 md:w-7 md:h-7 flex items-center justify-center text-[9px] md:text-[10px] font-bold rounded-full ${
+                className={`w-7 h-7 flex items-center justify-center text-[10px] font-bold rounded-full ${
                   i === winningNumbers.length - 1
-                   ? 'rounded-full border border-[rgba(34,0,0,0)] bg-[#E93737] text-white shadow-[inset_0_5.376px_5.376px_rgba(255,248,248,0.51)]'
-                   : 'rounded-full border-[2px] border-white bg-[#E8EBEE] text-[#111111] shadow-[inset_4.032px_4.032px_9.408px_rgba(136,150,163,0.58),inset_-4.032px_-4.032px_9.408px_#FFF]'
+                   ? 'rounded-[36.289px] border border-[rgba(34,0,0,0)] bg-[#E93737] text-white shadow-[inset_0_5.376px_5.376px_rgba(255,248,248,0.51)]'
+      : 'rounded-[134.403px] border-[2.688px] border-white bg-[#E8EBEE] text-[#111111] shadow-[inset_4.032px_4.032px_9.408px_rgba(136,150,163,0.58),inset_-4.032px_-4.032px_9.408px_#FFF]'
                 }`}
               >
                 {num < 10 ? `0${num}` : num}
               </div>
             ))}
           </div>
-          <div className="flex items-center gap-1 text-[#A1A1A1] text-[9px] md:text-[10px]">
+          <div className="flex items-center gap-1 text-[#A1A1A1] text-[10px]">
             <span className="text-[#E8AC43] font-bold">Winning Numbers</span>
             <span>{date}</span>
           </div>
@@ -61,34 +60,33 @@ const MoreGamesCard = ({ logo, title, winningNumbers, date, jackpot, drawCloses,
       {/* Bottom Row */}
       <div className="flex justify-between items-end">
         <div>
-          <p className="text-[#E8AC43] text-[9px] md:text-[10px] font-medium uppercase tracking-wider mb-1">Estimated Jackpot</p>
+          <p className="text-[#E8AC43] text-[10px] font-medium uppercase tracking-wider mb-1">Estimated Jackpot</p>
           <div className="flex flex-col">
-            <span className="bg-[linear-gradient(90deg,_#F2DC94_0%,_#FFF2D7_43%,_#FFC15D_100%)] bg-clip-text text-transparent text-3xl md:text-4xl font-bold leading-tight">
+            <span className="bg-[linear-gradient(90deg,_#F2DC94_0%,_#FFF2D7_43%,_#FFC15D_100%)] bg-clip-text text-transparent text-4xl font-bold leading-tight">
               ${jackpot}
             </span>
-            <span className="text-[#E8AC43] text-xs md:text-sm font-black uppercase tracking-widest -mt-1">Million</span>
+            <span className="text-[#E8AC43] text-sm font-black uppercase tracking-widest -mt-1">Million</span>
           </div>
         </div>
 
-        <div className="flex gap-3 md:gap-4 border-l border-[#E8AC43]/30 pl-3 md:pl-4">
-          <div className="space-y-2 md:space-y-3">
+        <div className="flex gap-4 border-l border-[#E8AC43]/30 pl-4">
+          <div className="space-y-3">
             <div>
-              <p className="text-[#E8AC43] text-[9px] md:text-[10px] font-bold mb-0.5">Draw Closes</p>
-              <p className="text-[#A1A1A1] text-[8px] md:text-[9px] font-medium leading-tight">{drawCloses}</p>
+              <p className="text-[#E8AC43] text-[10px] font-bold mb-0.5">Draw Closes</p>
+              <p className="text-[#A1A1A1] text-[9px] font-medium leading-tight">{drawCloses}</p>
             </div>
             <div>
-              <p className="text-[#E8AC43] text-[9px] md:text-[10px] font-bold mb-0.5">Next Drawing</p>
-              <p className="text-[#A1A1A1] text-[8px] md:text-[9px] font-medium leading-tight">{nextDrawing}</p>
+              <p className="text-[#E8AC43] text-[10px] font-bold mb-0.5">Next Drawing</p>
+              <p className="text-[#A1A1A1] text-[9px] font-medium leading-tight">{nextDrawing}</p>
             </div>
           </div>
         </div>
       </div>
     </motion.div>
-
   );
 };
 
-const MoreGames = () => {
+const LotteryGamesToPlay = () => {
   const [selectedGame, setSelectedGame] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -154,10 +152,10 @@ const MoreGames = () => {
     >
       <div className="flex items-center justify-between">
         <h3 className="text-white text-xl font-bold">More games to play</h3>
-        <Link to="/dashboard/lottery-games" className="flex items-center gap-1 text-[#E8AC43] hover:text-white transition-colors text-sm font-medium">
+        <button className="flex items-center gap-1 text-[#E8AC43] hover:text-white transition-colors text-sm font-medium">
           <span>View All Lotteries</span>
           <ChevronRight size={16} />
-        </Link>
+        </button>
       </div>
 
       <div className="relative group">
@@ -176,7 +174,7 @@ const MoreGames = () => {
             1024: { slidesPerView: 2.5 },
             1280: { slidesPerView: 3 },
           }}
-          className="!py-1"
+          className="pb-4"
         >
           {games.map((game, i) => (
             <SwiperSlide key={i}>
@@ -203,4 +201,4 @@ const MoreGames = () => {
   );
 };
 
-export default MoreGames;
+export default LotteryGamesToPlay;

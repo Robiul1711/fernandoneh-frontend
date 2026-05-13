@@ -1,13 +1,16 @@
 import React, { useState } from 'react'
 import OtpInput from 'otp-input-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Logo from '../../assets/images/logo.png'
 
 const OTP = () => {
   const [otp, setOtp] = useState('')
-
+  const navigate = useNavigate()
+  
   const handleContinue = () => {
     console.log('OTP Entered:', otp)
+
+    navigate('/new-password')
   }
 
   return (
@@ -43,7 +46,7 @@ const OTP = () => {
           disabled={false}
           autoFocus
           className="otp-container"
-          inputClassName="!w-14 !h-16 !text-2xl !bg-[#4B4B4B] !text-white !border-none !rounded-xl !mx-2 focus:!ring-2 focus:!ring-[#E8AC43] outline-none"
+          inputClassName="!w-10  md:!w-12 lg:!w-14 !h-10 md:!h-12 lg:!h-14  !text-2xl !bg-[#4B4B4B] !text-white !border-none !rounded-[8px] md:!rounded-xl !mx-2 focus:!ring-2 focus:!ring-[#E8AC43] outline-none"
           placeholder="------"
         />
       </div>

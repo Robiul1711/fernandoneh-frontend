@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, CheckCircle2 } from 'lucide-react'
 import Logo from '../../assets/images/logo.png'
 
@@ -22,9 +22,12 @@ const NewPassword = () => {
 
   const password = watch('password', '')
   const isPasswordStrong = password.length >= 8
+  const navigate = useNavigate()
 
   const onSubmit = (data) => {
     console.log('New Password Data:', data)
+
+    navigate('/dashboard')
   }
 
   return (

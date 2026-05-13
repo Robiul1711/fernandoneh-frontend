@@ -108,7 +108,7 @@ const LotteryGames = () => {
       <LotteryBanner />
 
       {/* Featured Games Section */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xlg:grid-cols-2 gap-6">
         {featuredGames.map((game, i) => (
           <JackpotCard key={i} {...game} />
         ))}
@@ -123,7 +123,7 @@ const LotteryGames = () => {
           <h3 className="text-white text-lg font-bold uppercase tracking-wider">Play the most popular lottery games</h3>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xlg:grid-cols-3 gap-6">
           {popularGames.map((game, i) => (
             <LotteryGameCard key={i} {...game} />
           ))}
