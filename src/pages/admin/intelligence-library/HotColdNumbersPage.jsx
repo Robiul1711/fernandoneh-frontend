@@ -116,6 +116,7 @@ const HotColdNumbersPage = () => {
                   structured, data-driven framework for making picks rather than
                   relying on gut feeling or purely random selection.
                 </p>
+                
                 <p>
                   This guide explains what hot, cold, and overdue numbers are,
                   how to interpret them, and — most importantly — how to use
