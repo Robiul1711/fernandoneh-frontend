@@ -12,15 +12,35 @@ import {
   Menu
 } from "lucide-react";
 import LanguageArea from "@/components/common/LanguageArea";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import useMutationClient from "@/hooks/useMutationClient";
+import { clearAuth } from "@/redux/slices/authSlice";
 
 const CommonNavbar = ({ open, setOpen }) => {
   const [langOpen, setLangOpen] = useState(false);
   const [userOpen, setUserOpen] = useState(false);
   const {user} = useSelector((state) => state.ui);
-  // console.log(user)
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  const { mutate: logout, isPending } = useMutationClient({
+    url: "/logout",
+    isPrivate: true,
+    successMessage: "Logged out successfully",
+  });
+
+  const handleLogout = () => {
+    logout(
+      {},
+      {
+        onSuccess: () => {
+          dispatch(clearAuth());
+          navigate("/login");
+        },
+      }
+    );
+  };
 
   return (
     <motion.div 
@@ -106,9 +126,13 @@ const CommonNavbar = ({ open, setOpen }) => {
                     <ChevronRight size={14} className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
                   </Link>
                   <div className="h-[1px] bg-[#333333] my-1 mx-2"></div>
-                  <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all">
+                  <button 
+                    onClick={handleLogout}
+                    disabled={isPending}
+                    className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
                     <LogOut size={18} />
-                    <span>Log Out</span>
+                    <span>{isPending ? "Logging out..." : "Log Out"}</span>
                   </button>
                 </div>
               </motion.div>
