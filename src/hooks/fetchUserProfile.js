@@ -10,12 +10,13 @@ export const useUserProfile = () => {
   const dispatch = useDispatch();
   const axiosSecure = useAxiosSecure();
 
-  const query = useQuery({
+   const query = useQuery({
     queryKey: ["userProfile", token],
     queryFn: async () => {
       if (!token) return null;
-      const res = await axiosSecure.get("/get-profile");
-      return res.data.userdata || res.data;
+      const res = await axiosSecure.get("/profile");
+      // console.log(res.data.data)
+      return res.data;
     },
     enabled: !!token,
     staleTime: 1000 * 60 * 5, // 5 minutes
@@ -25,6 +26,7 @@ export const useUserProfile = () => {
   useEffect(() => {
     if (query.data) {
       dispatch(setUser(query.data));
+      console.log(query?.data)
     }
   }, [query.data, dispatch]);
 

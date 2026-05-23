@@ -8,7 +8,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./redux/store";
-
+import { Toaster } from "sonner";
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
@@ -17,6 +17,7 @@ createRoot(document.getElementById("root")).render(
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <RouterProvider router={router} />
+           <Toaster position="bottom-right" richColors />
           {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </PersistGate>
       </Provider>

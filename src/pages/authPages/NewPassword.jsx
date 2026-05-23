@@ -1,13 +1,22 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, CheckCircle2 } from 'lucide-react'
+import { useDispatch } from 'react-redux'
 import Logo from '../../assets/images/logo.png'
+import useMutationClient from '@/hooks/useMutationClient'
+import { setAuth } from '@/redux/slices/authSlice'
 
 const NewPassword = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  // Retrieve data saved by ConfirmPassword → OTP flow
+  const email = localStorage.getItem('fp_email') || ''
+  const otp   = localStorage.getItem('fp_otp')   || ''
+
   const {
     register,
     handleSubmit,
@@ -20,15 +29,42 @@ const NewPassword = () => {
     }
   })
 
-  const password = watch('password', '')
-  const isPasswordStrong = password.length >= 8
-  const navigate = useNavigate()
+  const { mutate, isPending } = useMutationClient({
+    url: '/reset-password',
+    successMessage: 'Password reset successfully!',
+  })
 
   const onSubmit = (data) => {
-    console.log('New Password Data:', data)
-
-    navigate('/dashboard')
+    mutate(
+      {
+        data: {
+          email,
+          otp,
+          password: data.password,
+          password_confirmation: data.confirmPassword,
+        },
+      },
+      {
+        onSuccess: (res) => {
+          const resData = res?.data
+          // Save token if the API returns one
+          if (resData?.access_token) {
+            dispatch(setAuth({
+              token: resData.access_token,
+              user: resData?.data || null,
+            }))
+          }
+          // Clean up all forgot-password localStorage keys
+          localStorage.removeItem('fp_email')
+          localStorage.removeItem('fp_otp')
+          navigate('/dashboard')
+        },
+      }
+    )
   }
+
+  const password = watch('password', '')
+  const isPasswordStrong = password.length >= 8
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -54,12 +90,12 @@ const NewPassword = () => {
           <label className="text-white text-sm font-medium block">New Password</label>
           <div className="relative">
             <input
-              {...register('password', { 
+              {...register('password', {
                 required: 'Password is required',
                 minLength: { value: 8, message: 'Must be at least 8 characters' }
               })}
               type={showPassword ? 'text' : 'password'}
-              placeholder="Enter your password"
+              placeholder="Enter your new password"
               className="w-full bg-[#1A1A1A] border-none text-white px-4 py-3 rounded-lg focus:ring-1 focus:ring-[#E8AC43] outline-none placeholder:text-[#666666] pr-12"
             />
             <button
@@ -70,6 +106,7 @@ const NewPassword = () => {
               {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
             </button>
           </div>
+          {errors.password && <p className="text-red-500 text-xs">{errors.password.message}</p>}
           <div className="flex justify-between items-center px-1">
             <p className="text-[#A1A1A1] text-xs">Must be at least 8 characters</p>
             {isPasswordStrong && (
@@ -83,19 +120,19 @@ const NewPassword = () => {
 
         {/* Confirm Password */}
         <div className="space-y-2">
-          <label className="text-white text-sm font-medium block">Conform Password</label>
+          <label className="text-white text-sm font-medium block">Confirm Password</label>
           <div className="relative">
             <input
-              {...register('confirmPassword', { 
+              {...register('confirmPassword', {
                 required: 'Please confirm your password',
                 validate: (val) => {
                   if (watch('password') !== val) {
-                    return "Passwords do not match";
+                    return 'Passwords do not match'
                   }
                 }
               })}
               type={showConfirmPassword ? 'text' : 'password'}
-              placeholder="Enter your password"
+              placeholder="Confirm your new password"
               className="w-full bg-[#1A1A1A] border-none text-white px-4 py-3 rounded-lg focus:ring-1 focus:ring-[#E8AC43] outline-none placeholder:text-[#666666] pr-12"
             />
             <button
@@ -106,24 +143,25 @@ const NewPassword = () => {
               {showConfirmPassword ? <Eye size={20} /> : <EyeOff size={20} />}
             </button>
           </div>
+          {errors.confirmPassword && <p className="text-red-500 text-xs">{errors.confirmPassword.message}</p>}
           <div className="flex justify-between items-center px-1">
             <p className="text-[#A1A1A1] text-xs">Must be at least 8 characters</p>
             {watch('confirmPassword') && watch('confirmPassword') === watch('password') && watch('confirmPassword').length >= 8 && (
               <div className="flex items-center gap-1 text-[#4CAF50]">
                 <CheckCircle2 size={14} />
-                <span className="text-xs font-medium">Strong</span>
+                <span className="text-xs font-medium">Match</span>
               </div>
             )}
           </div>
-          {errors.confirmPassword && <p className="text-red-500 text-xs">{errors.confirmPassword.message}</p>}
         </div>
 
-        {/* Continue Button */}
+        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full py-3 px-4 rounded-xl font-bold text-[#0D0D0D] bg-gradient-to-r from-[#E8AC43] to-[#AF7523] hover:opacity-90 transition-all text-lg shadow-[0_4px_20px_rgba(232,172,67,0.3)] mt-4"
+          disabled={isPending}
+          className="w-full py-3 px-4 rounded-xl font-bold text-[#0D0D0D] bg-gradient-to-r from-[#E8AC43] to-[#AF7523] hover:opacity-90 transition-all text-lg shadow-[0_4px_20px_rgba(232,172,67,0.3)] mt-4 disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Continue
+          {isPending ? 'Resetting...' : 'Reset Password'}
         </button>
       </form>
     </div>
