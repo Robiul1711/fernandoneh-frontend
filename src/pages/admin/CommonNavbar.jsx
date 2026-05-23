@@ -12,10 +12,15 @@ import {
   Menu
 } from "lucide-react";
 import LanguageArea from "@/components/common/LanguageArea";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const CommonNavbar = ({ open, setOpen }) => {
   const [langOpen, setLangOpen] = useState(false);
   const [userOpen, setUserOpen] = useState(false);
+  const {user} = useSelector((state) => state.ui);
+  // console.log(user)
+
 
   return (
     <motion.div 
@@ -39,7 +44,7 @@ const CommonNavbar = ({ open, setOpen }) => {
         </div>
         <div className="hidden sm:block">
           <h2 className="text-white text-sm md:text-lg font-bold flex items-center gap-2 leading-none mb-0.5 md:mb-1">
-            Good Morning, Kabir <span className="text-base md:text-lg">👋</span>
+            Good Morning, {user?.name} <span className="text-base md:text-lg">👋</span>
           </h2>
           <p className="text-[#A1A1A1] text-[9px] md:text-xs font-medium uppercase tracking-wider">Play Smarter With AI.</p>
         </div>
@@ -68,13 +73,12 @@ const CommonNavbar = ({ open, setOpen }) => {
             className="flex items-center gap-2 md:gap-3 pl-2 pr-1 py-1 bg-[#1A1A1A]/40 rounded-2xl hover:bg-[#1A1A1A] transition-all group"
           >
             <div className="text-left hidden lg:block">
-              <p className="text-white text-xs font-bold leading-tight">Kabir Nishat</p>
-              <p className="text-[#4ADE80] text-[10px] font-medium leading-tight">Premium Member</p>
+              <p className="text-white text-xs font-bold leading-tight">{user?.name}</p>
+              <p className="text-[#4ADE80] text-[10px] font-medium leading-tight">{user?.role}</p>
             </div>
             <ChevronDown size={14} className={`text-[#A1A1A1] transition-transform ${userOpen ? 'rotate-180' : ''}`} />
-            <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-gradient-to-br from-[#E8AC43] to-[#AF7523] flex items-center justify-center text-[#0D0D0D] font-bold text-xs md:text-sm shadow-lg">
-              KN
-            </div>
+             <img src={user?.image} alt="Profile" className="w-10 h-10 rounded-full object-cover" />
+          
           </button>
 
           <AnimatePresence>
@@ -87,20 +91,20 @@ const CommonNavbar = ({ open, setOpen }) => {
                 className="absolute top-full right-0 mt-2 w-56 bg-[#1A1A1A] border border-[#333333] rounded-xl shadow-2xl z-[300] overflow-hidden"
               >
                 <div className="p-4 border-b border-[#333333]">
-                  <p className="text-white text-sm font-bold">Kabir Nishat</p>
-                  <p className="text-[#A1A1A1] text-xs">kabir.nishat@example.com</p>
+                  <p className="text-white text-sm font-bold">{user?.name}</p>
+                  <p className="text-[#A1A1A1] text-xs">{user?.email}</p>
                 </div>
                 <div className="p-2">
-                  <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-[#A1A1A1] hover:text-white hover:bg-[#262626] rounded-lg transition-all group">
+                  <Link to="/dashboard/settings" className="w-full flex items-center gap-3 px-3 py-2 text-sm text-[#A1A1A1] hover:text-white hover:bg-[#262626] rounded-lg transition-all group">
                     <User size={18} />
                     <span>My Profile</span>
                     <ChevronRight size={14} className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </button>
-                  <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-[#A1A1A1] hover:text-white hover:bg-[#262626] rounded-lg transition-all group">
+                  </Link>
+                  <Link to="/dashboard/settings" className="w-full flex items-center gap-3 px-3 py-2 text-sm text-[#A1A1A1] hover:text-white hover:bg-[#262626] rounded-lg transition-all group">
                     <Settings size={18} />
                     <span>Settings</span>
                     <ChevronRight size={14} className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </button>
+                  </Link>
                   <div className="h-[1px] bg-[#333333] my-1 mx-2"></div>
                   <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all">
                     <LogOut size={18} />

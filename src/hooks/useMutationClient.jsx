@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import useAxiosPublic from "./useAxiosPublic";
 import useAxiosSecure from "./useAxiosSecure";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 const useMutationClient = ({
   url,
@@ -24,6 +24,7 @@ const useMutationClient = ({
 
     onSuccess: (res) => {
       const data = res?.data || res;
+      // console.log("i am here", data?.message);
       toast.success(data?.message || successMessage);
 
       // ♻️ Invalidate related queries
@@ -35,14 +36,16 @@ const useMutationClient = ({
     },
 
     onError: (error) => {
-      const msg = error?.response?.data?.message || error.message || "Something went wrong";
+      const msg =
+        error?.response?.data?.message ||
+        error.message ||
+        "Something went wrong";
       toast.error(msg);
     },
   });
 };
 
 export default useMutationClient;
-
 
 // const { mutate } = useMutationClient({
 //   url: "/auth/login",

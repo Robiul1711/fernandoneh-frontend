@@ -15,8 +15,8 @@ const uiSlice = createSlice({
       state.resetToken = action.payload;
     },
     setUser: (state, action) => {
-      const { user } = action.payload;
-      state.user = user;
+      state.user = action.payload.data;
+      console.log(state.user)
     },
     setApiError: (state, action) => {
       state.apiError = action.payload;

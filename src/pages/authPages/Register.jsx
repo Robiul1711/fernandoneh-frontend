@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, CheckCircle2 } from 'lucide-react'
 import { FcGoogle } from 'react-icons/fc'
 import Logo from '../../assets/images/logo.png'
+import useMutationClient from '@/hooks/useMutationClient'
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  
+  const navigate = useNavigate()
+
   const {
     register,
     handleSubmit,
@@ -18,19 +20,39 @@ const Register = () => {
     defaultValues: {
       fullName: '',
       email: '',
+      phone: '', // Added phone state
       password: '',
       confirmPassword: '',
       agreeTerms: true,
     }
   })
 
-  const password = watch('password', '')
-  const isPasswordStrong = password.length >= 8
+  const { mutate, isPending } = useMutationClient({
+    url: '/register',
+    successMessage: 'Registration successful! Please check your email for OTP.',
+  })
 
   const onSubmit = (data) => {
-    console.log('Form Data:', data)
-    // Handle registration logic here
+    // Mapping payload explicitly to match your Postman screenshot keys
+    const payload = {
+      name: data.fullName,
+      email: data.email,
+      phone: data.phone, // Added phone payload
+      password: data.password,
+      password_confirmation: data.confirmPassword,
+      terms_accepted: data.agreeTerms ? '1' : '0', // API expects '1' for true
+    }
+
+    mutate({ data: payload }, {
+      onSuccess: () => {
+        localStorage.setItem('otp_email', data.email)
+        navigate('/otp')
+      },
+    })
   }
+
+  const password = watch('password', '')
+  const isPasswordStrong = password.length >= 8
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -41,7 +63,6 @@ const Register = () => {
           alt="AI Lottery App Logo"
           className="w-24 h-auto mb-2"
         />
-
       </div>
 
       {/* Heading Section */}
@@ -58,7 +79,7 @@ const Register = () => {
           <input
             {...register('fullName', { required: 'Full name is required' })}
             type="text"
-            placeholder="Enter your email"
+            placeholder="Enter your full name"
             className="w-full bg-[#1A1A1A] border-none text-white px-4 py-3 rounded-lg focus:ring-1 focus:ring-[#E8AC43] outline-none placeholder:text-[#666666]"
           />
           {errors.fullName && <p className="text-red-500 text-xs">{errors.fullName.message}</p>}
@@ -68,11 +89,11 @@ const Register = () => {
         <div className="space-y-2">
           <label className="text-white text-sm font-medium block">Email</label>
           <input
-            {...register('email', { 
+            {...register('email', {
               required: 'Email is required',
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Invalid email address"
+                message: 'Invalid email address'
               }
             })}
             type="email"
@@ -82,12 +103,24 @@ const Register = () => {
           {errors.email && <p className="text-red-500 text-xs">{errors.email.message}</p>}
         </div>
 
+        {/* Phone Field (Newly Added based on screenshot) */}
+        <div className="space-y-2">
+          <label className="text-white text-sm font-medium block">Phone</label>
+          <input
+            {...register('phone', { required: 'Phone number is required' })}
+            type="tel"
+            placeholder="Enter your phone number"
+            className="w-full bg-[#1A1A1A] border-none text-white px-4 py-3 rounded-lg focus:ring-1 focus:ring-[#E8AC43] outline-none placeholder:text-[#666666]"
+          />
+          {errors.phone && <p className="text-red-500 text-xs">{errors.phone.message}</p>}
+        </div>
+
         {/* Password */}
         <div className="space-y-2">
           <label className="text-white text-sm font-medium block">Password</label>
           <div className="relative">
             <input
-              {...register('password', { 
+              {...register('password', {
                 required: 'Password is required',
                 minLength: { value: 8, message: 'Must be at least 8 characters' }
               })}
@@ -116,19 +149,19 @@ const Register = () => {
 
         {/* Confirm Password */}
         <div className="space-y-2">
-          <label className="text-white text-sm font-medium block">Conform Password</label>
+          <label className="text-white text-sm font-medium block">Confirm Password</label>
           <div className="relative">
             <input
-              {...register('confirmPassword', { 
+              {...register('confirmPassword', {
                 required: 'Please confirm your password',
                 validate: (val) => {
                   if (watch('password') !== val) {
-                    return "Passwords do not match";
+                    return 'Passwords do not match'
                   }
                 }
               })}
               type={showConfirmPassword ? 'text' : 'password'}
-              placeholder="Enter your password"
+              placeholder="Confirm your password"
               className="w-full bg-[#1A1A1A] border-none text-white px-4 py-3 rounded-lg focus:ring-1 focus:ring-[#E8AC43] outline-none placeholder:text-[#666666] pr-12"
             />
             <button
@@ -160,22 +193,23 @@ const Register = () => {
               className="w-5 h-5 rounded-full appearance-none border border-[#4CAF50] bg-transparent checked:bg-[#4CAF50] cursor-pointer"
               id="terms"
             />
-            <CheckCircle2 
-              size={12} 
-              className={`absolute left-1 top-1 text-[#0D0D0D] pointer-events-none transition-opacity ${watch('agreeTerms') ? 'opacity-100' : 'opacity-0'}`} 
+            <CheckCircle2
+              size={12}
+              className={`absolute left-1 top-1 text-[#0D0D0D] pointer-events-none transition-opacity ${watch('agreeTerms') ? 'opacity-100' : 'opacity-0'}`}
             />
           </div>
           <label htmlFor="terms" className="text-white text-sm cursor-pointer select-none">
-            I have read, and agree with <span className="text-[#E8AC43] font-medium">Terms of services</span> & <span className="text-[#E8AC43] font-medium">Privacy policy</span>
+            I have read, and agree with <span className="text-[#E8AC43] font-medium">Terms of services</span> &amp; <span className="text-[#E8AC43] font-medium">Privacy policy</span>
           </label>
         </div>
 
         {/* Sign Up Button */}
         <button
           type="submit"
-          className="w-full py-3 px-4 rounded-xl font-bold text-[#0D0D0D] bg-gradient-to-r from-[#E8AC43] to-[#AF7523] hover:opacity-90 transition-all text-lg shadow-[0_4px_20px_rgba(232,172,67,0.3)]"
+          disabled={isPending}
+          className="w-full py-3 px-4 rounded-xl font-bold text-[#0D0D0D] bg-gradient-to-r from-[#E8AC43] to-[#AF7523] hover:opacity-90 transition-all text-lg shadow-[0_4px_20px_rgba(232,172,67,0.3)] disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Sign Up
+          {isPending ? 'Signing Up...' : 'Sign Up'}
         </button>
 
         {/* Divider */}

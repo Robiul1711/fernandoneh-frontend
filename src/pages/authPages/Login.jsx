@@ -3,12 +3,16 @@ import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, CheckCircle2 } from 'lucide-react'
 import { FcGoogle } from 'react-icons/fc'
+import { useDispatch } from 'react-redux'
 import Logo from '../../assets/images/logo.png'
+import useMutationClient from '@/hooks/useMutationClient'
+import { setAuth } from '@/redux/slices/authSlice'
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
-  
+  const dispatch = useDispatch()
+
   const {
     register,
     handleSubmit,
@@ -22,14 +26,29 @@ const Login = () => {
     }
   })
 
-  const password = watch('password', '')
-  const isPasswordStrong = password.length >= 8
+  const { mutate, isPending } = useMutationClient({
+    url: '/login',
+    successMessage: 'Login successful!',
+  })
 
   const onSubmit = (data) => {
-    console.log('Login Data:', data)
-
-    navigate('/dashboard')
+    mutate(
+      { data: { email: data.email, password: data.password } },
+      {
+        onSuccess: (res) => {
+          const resData = res?.data
+          dispatch(setAuth({
+            token: resData?.access_token,
+            user: resData?.data,
+          }))
+          navigate('/dashboard')
+        },
+      }
+    )
   }
+
+  const password = watch('password', '')
+  const isPasswordStrong = password.length >= 8
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -54,11 +73,11 @@ const Login = () => {
         <div className="space-y-2">
           <label className="text-white text-sm font-medium block">Email</label>
           <input
-            {...register('email', { 
+            {...register('email', {
               required: 'Email is required',
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Invalid email address"
+                message: 'Invalid email address'
               }
             })}
             type="email"
@@ -73,7 +92,7 @@ const Login = () => {
           <label className="text-white text-sm font-medium block">Password</label>
           <div className="relative">
             <input
-              {...register('password', { 
+              {...register('password', {
                 required: 'Password is required',
                 minLength: { value: 8, message: 'Must be at least 8 characters' }
               })}
@@ -103,9 +122,10 @@ const Login = () => {
         {/* Login Button */}
         <button
           type="submit"
-          className="w-full py-3 px-4 rounded-xl font-bold text-[#0D0D0D] bg-gradient-to-r from-[#E8AC43] to-[#AF7523] hover:opacity-90 transition-all text-lg shadow-[0_4px_20px_rgba(232,172,67,0.3)]"
+          disabled={isPending}
+          className="w-full py-3 px-4 rounded-xl font-bold text-[#0D0D0D] bg-gradient-to-r from-[#E8AC43] to-[#AF7523] hover:opacity-90 transition-all text-lg shadow-[0_4px_20px_rgba(232,172,67,0.3)] disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Login
+          {isPending ? 'Logging in...' : 'Login'}
         </button>
 
         {/* Remember Me & Forgot Password */}
@@ -118,16 +138,16 @@ const Login = () => {
                 className="w-5 h-5 rounded-full appearance-none border border-[#4CAF50] bg-transparent checked:bg-[#4CAF50] cursor-pointer"
                 id="remember"
               />
-              <CheckCircle2 
-                size={12} 
-                className={`absolute left-1 top-1 text-[#0D0D0D] pointer-events-none transition-opacity ${watch('rememberMe') ? 'opacity-100' : 'opacity-0'}`} 
+              <CheckCircle2
+                size={12}
+                className={`absolute left-1 top-1 text-[#0D0D0D] pointer-events-none transition-opacity ${watch('rememberMe') ? 'opacity-100' : 'opacity-0'}`}
               />
             </div>
             <label htmlFor="remember" className="text-white text-sm cursor-pointer select-none">
               Remember me
             </label>
           </div>
-          <Link to="/confirm-password" title='Forgot Password' className="text-[#008080] text-sm hover:underline">
+          <Link to="/confirm-password" title="Forgot Password" className="text-[#008080] text-sm hover:underline">
             Forgot your password?
           </Link>
         </div>
@@ -135,7 +155,7 @@ const Login = () => {
         {/* Divider */}
         <div className="relative flex items-center py-4">
           <div className="flex-grow border-t border-[#333333]"></div>
-          <span className="flex-shrink mx-4 text-[#A1A1A1] text-xs uppercase tracking-wider">Or register with</span>
+          <span className="flex-shrink mx-4 text-[#A1A1A1] text-xs uppercase tracking-wider">Or login with</span>
           <div className="flex-grow border-t border-[#333333]"></div>
         </div>
 
@@ -150,7 +170,7 @@ const Login = () => {
 
         {/* Footer */}
         <p className="text-center text-[#A1A1A1] text-sm pt-4">
-          Already have an account? <Link to="/" className="text-[#4ADE80] font-medium hover:underline">Register</Link>
+          Don't have an account? <Link to="/" className="text-[#4ADE80] font-medium hover:underline">Register</Link>
         </p>
       </form>
     </div>
