@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Sparkles, ChevronDown, Shuffle } from 'lucide-react';
+import useClient from '@/hooks/useClient';
 
 const GenerateForm = ({ 
   selectedGame, 
@@ -9,8 +10,14 @@ const GenerateForm = ({
   setNumSuggestions, 
   pickType, 
   setPickType, 
-  handleGenerate 
+  handleGenerate,
+  isLoading
 }) => {
+        const { data, isLoading: isGamesLoading, isError } = useClient({
+    queryKey: ["lotterygames" ],
+    url: "/lotteries",
+    isPrivate: true,
+  });
   return (
     <motion.div 
       initial={{ opacity: 0, x: -20 }}
@@ -26,8 +33,10 @@ const GenerateForm = ({
               onChange={(e) => setSelectedGame(e.target.value)}
               className="w-full bg-[#0D0D0D] border border-white/10 rounded-2xl px-4 py-3.5 text-white text-sm font-medium appearance-none focus:outline-none focus:border-[#E8AC43]/50 transition-all cursor-pointer"
             >
-              <option>Power Ball</option>
-              <option>Mega Millions</option>
+           
+              {data?.data?.map((item) => (
+                <option key={item.id}>{item.name}</option>
+              ))}
             </select>
             <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-[#A1A1A1] pointer-events-none group-focus-within:rotate-180 transition-transform" size={18} />
           </div>
@@ -81,10 +90,13 @@ const GenerateForm = ({
       <div className="space-y-4">
         <button 
           onClick={handleGenerate}
-          className="w-full bg-gradient-to-r from-[#E8EBEE] to-[#CFD4D9] hover:from-white hover:to-[#E8EBEE] text-[#0D0D0D] font-black text-sm py-4 rounded-xl flex items-center justify-center gap-3 shadow-lg transition-all active:scale-[0.98]"
+          disabled={isLoading}
+          className={`w-full bg-gradient-to-r from-[#E8EBEE] to-[#CFD4D9] hover:from-white hover:to-[#E8EBEE] text-[#0D0D0D] font-black text-sm py-4 rounded-xl flex items-center justify-center gap-3 shadow-lg transition-all active:scale-[0.98] ${
+            isLoading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         >
-          <Sparkles size={18} />
-          <span>GENERATE WINNING NUMBERS</span>
+          <Sparkles size={18} className={isLoading ? "animate-spin" : ""} />
+          <span>{isLoading ? "GENERATING WINNING NUMBERS..." : "GENERATE WINNING NUMBERS"}</span>
         </button>
         <p className="text-center text-[#A1A1A1] text-xs font-medium">
           {pickType === 'smart' ? 'Based on hot, cold, and overdue number patterns' : 'Ready for the next draw?'}

@@ -9,6 +9,8 @@ const InsightBox = ({
   hotPowerball,
   overdueNumbers,
   overduePowerball,
+  insight,
+  insights,
 }) => {
   return (
     <motion.div
@@ -42,8 +44,24 @@ const InsightBox = ({
             className="space-y-8"
           >
             <h3 className="text-white text-lg font-medium leading-relaxed mb-6">
-              The Smart Pick Combos are generated with the following numbers:
+              {insights && typeof insights === 'object' && !Array.isArray(insights) && insights.title ? "" : "The Smart Pick Combos are generated with the following numbers:"}
             </h3>
+
+            {Array.isArray(insights) ? (
+              <div className="space-y-4 mb-6">
+                {insights.map((ins, index) => (
+                  <div key={index} className="bg-white/5 p-4 rounded-2xl border border-white/10">
+                    <h4 className="text-[#E8AC43] text-sm font-bold mb-1">{ins.title}</h4>
+                    <p className="text-[#A1A1A1] text-xs leading-relaxed">{ins.description}</p>
+                  </div>
+                ))}
+              </div>
+            ) : insights && typeof insights === 'object' && insights.title && insights.description ? (
+              <div className="bg-white/5 p-4 rounded-2xl border border-white/10 mb-6">
+                <h4 className="text-[#E8AC43] text-sm font-bold mb-1">{insights.title}</h4>
+                <p className="text-[#A1A1A1] text-xs leading-relaxed">{insights.description}</p>
+              </div>
+            ) : null}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-4">
@@ -116,13 +134,9 @@ const InsightBox = ({
             exit={{ opacity: 0 }}
             className="space-y-6"
           >
-            <h3 className="text-white text-2xl font-bold">Quick Pick:</h3>
+            <h3 className="text-white text-2xl font-bold">{insight?.title || "Quick Pick:"}</h3>
             <p className="text-[#A1A1A1] leading-relaxed text-sm md:text-base">
-              Powerball is a lottery game which chooses 5 winning numbers from
-              69 numbers and choose a Power Ball number from a separate set of
-              numbers. Use our Quick Pick Combo Generator to discover
-              potentially successful combinations. The generator provides you
-              with random combinations and it is fast and easy to use.
+              {insight?.description || "Powerball is a lottery game which chooses 5 winning numbers from 69 numbers and choose a Power Ball number from a separate set of numbers. Use our Quick Pick Combo Generator to discover potentially successful combinations. The generator provides you with random combinations and it is fast and easy to use."}
             </p>
           </motion.div>
         )}
