@@ -6,25 +6,80 @@ import { Sparkles } from 'lucide-react';
 import GenerateForm from './GenerateForm';
 import InsightBox from './InsightBox';
 import ResultsBox from './ResultsBox';
+import useClient from '@/hooks/useClient';
+import useMutationClient from '@/hooks/useMutationClient';
 
 const GeneratePicks = () => {
   const [selectedGame, setSelectedGame] = useState('Power Ball');
   const [numSuggestions, setNumSuggestions] = useState('3');
   const [pickType, setPickType] = useState('smart'); // 'smart' or 'quick'
   const [isGenerated, setIsGenerated] = useState(false);
+  const [generatedData, setGeneratedData] = useState(null);
+
+  // Fetch games to resolve lottery_id dynamically
+  const { data: gamesData } = useClient({
+    queryKey: ['lotterygames'],
+    url: '/lotteries',
+    isPrivate: true,
+  });
+
+  const { mutate, isPending } = useMutationClient({
+    url: '/lotteries/generate',
+    isPrivate: true,
+  });
 
   const handleGenerate = () => {
-    setIsGenerated(true);
+    const selectedLottery = gamesData?.data?.find(item => item.name === selectedGame);
+    const lotteryId = selectedLottery?.id || 2;
+
+    const payload = {
+      lottery_id: lotteryId,
+      mode: pickType === 'smart' ? 'smart_system' : 'quick',
+      total_sets: parseInt(numSuggestions, 10),
+    };
+
+    mutate(
+      { data: payload },
+      {
+        onSuccess: (res) => {
+          const responseData = res?.data;
+          if (responseData?.success) {
+            setGeneratedData(responseData.data);
+            setIsGenerated(true);
+          }
+        },
+      }
+    );
   };
 
-  // Mock data for insights
-  const hotNumbers = [63, 64, 18, 21, 28, 36, 6, 52];
-  const hotPowerball = [63, 64, 18];
-  const overdueNumbers = [67, 44, 1, 15, 34, 26, 8, 51];
-  const overduePowerball = [67, 44, 1];
 
-  // Mock data for generated sets
-  const generatedSets = [
+  // Extract number insights from API response, falling back to original mock numbers
+  const hotNumbers = generatedData?.insights?.hot_numbers || 
+                     generatedData?.insights?.hotNumbers || 
+                     [63, 64, 18, 21, 28, 36, 6, 52];
+
+  const hotPowerball = generatedData?.insights?.hot_special_numbers || 
+                       generatedData?.insights?.hot_special_number || 
+                       generatedData?.insights?.hotPowerball || 
+                       generatedData?.insights?.hot_powerballs || 
+                       [63, 64, 18];
+
+  const overdueNumbers = generatedData?.insights?.overdue_numbers || 
+                         generatedData?.insights?.overdueNumbers || 
+                         [67, 44, 1, 15, 34, 26, 8, 51];
+
+  const overduePowerball = generatedData?.insights?.overdue_special_numbers || 
+                           generatedData?.insights?.overdue_special_number || 
+                           generatedData?.insights?.overduePowerball || 
+                           generatedData?.insights?.overdue_powerballs || 
+                           [67, 44, 1];
+
+  // Map generated sets if available, otherwise use initial placeholder structure
+  const generatedSets = generatedData?.generated_numbers?.map((set, idx) => ({
+    id: idx + 1,
+    numbers: set.main_numbers,
+    powerball: set.special_number
+  })) || [
     { id: 1, numbers: [1, 2, 4, 6, 8], powerball: 6 },
     { id: 2, numbers: [1, 2, 4, 6, 8], powerball: 6 },
     { id: 3, numbers: [1, 2, 4, 6, 8], powerball: 6 },
@@ -55,6 +110,7 @@ const GeneratePicks = () => {
           pickType={pickType}
           setPickType={setPickType}
           handleGenerate={handleGenerate}
+          isLoading={isPending}
         />
         
         <InsightBox 
@@ -64,6 +120,8 @@ const GeneratePicks = () => {
           hotPowerball={hotPowerball}
           overdueNumbers={overdueNumbers}
           overduePowerball={overduePowerball}
+          insight={generatedData?.insight}
+          insights={generatedData?.insights}
         />
       </div>
 
@@ -73,6 +131,8 @@ const GeneratePicks = () => {
         selectedGame={selectedGame}
         pickType={pickType}
         generatedSets={generatedSets}
+        image={generatedData}
+        confidenceScore={generatedData?.confidence_score}
       />
     </div>
   );

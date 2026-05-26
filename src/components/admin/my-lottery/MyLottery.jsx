@@ -12,6 +12,7 @@ import MassCashLogo from '@/assets/images/mashcash.png';
 import FloridaLotteryLogo from '@/assets/images/floridalottery.png';
 import Fantasy5Logo from '@/assets/images/fantasy.png';
 import NumbersGameLogo from '@/assets/images/numbergame.png';
+import useClient from '@/hooks/useClient';
 
 const SavedNumberRow = ({ title, logo, numbers, powerball, index }) => {
   return (
@@ -45,63 +46,18 @@ const SavedNumberRow = ({ title, logo, numbers, powerball, index }) => {
 
 const MyLottery = () => {
   const [activeTab, setActiveTab] = useState('tickets'); // 'tickets' or 'numbers'
-
-  const savedTickets = [
-    {
-      title: "MASS CASH",
-      logo: MassCashLogo,
-      winningNumbers: [7, 12, 23, 31, 2],
-      date: "Mon, 04/27/26",
-      jackpot: 87,
-      drawCloses: "Tomorrow, 09:59 PM ET",
-      nextDrawing: "Tomorrow, 10:59 PM ET"
-    },
-    {
-      title: "FLORIDA LOTTERY",
-      logo: FloridaLotteryLogo,
-      winningNumbers: [7, 12, 23, 31, 2],
-      date: "Mon, 04/27/26",
-      jackpot: 87,
-      drawCloses: "Tomorrow, 09:59 PM ET",
-      nextDrawing: "Tomorrow, 10:59 PM ET"
-    },
-    {
-      title: "THE NUMBERS GAME",
-      logo: NumbersGameLogo,
-      winningNumbers: [7, 12, 23, 31, 2],
-      date: "Mon, 04/27/26",
-      jackpot: 87,
-      drawCloses: "Tomorrow, 09:59 PM ET",
-      nextDrawing: "Tomorrow, 10:59 PM ET"
-    },
-    {
-      title: "FANTASY 5",
-      logo: Fantasy5Logo,
-      winningNumbers: [7, 12, 23, 31, 2],
-      date: "Mon, 04/27/26",
-      jackpot: 87,
-      drawCloses: "Tomorrow, 09:59 PM ET",
-      nextDrawing: "Tomorrow, 10:59 PM ET"
-    },
-    {
-      title: "MASS CASH",
-      logo: MassCashLogo,
-      winningNumbers: [7, 12, 23, 31, 2],
-      date: "Mon, 04/27/26",
-      jackpot: 87,
-      drawCloses: "Tomorrow, 09:59 PM ET",
-      nextDrawing: "Tomorrow, 10:59 PM ET"
-    },
-    {
-      title: "FLORIDA LOTTERY",
-      logo: FloridaLotteryLogo,
-      winningNumbers: [7, 12, 23, 31, 2],
-      date: "Mon, 04/27/26",
-      jackpot: 87,
-      drawCloses: "Tomorrow, 09:59 PM ET",
-      nextDrawing: "Tomorrow, 10:59 PM ET"
-    }
-  ];
+      const { data:pinnedLotteries, isLoading:pinnedLoading, isError:pinnedError } = useClient({
+    queryKey: ["lotteriespinned" ],
+    url: "/lotteries/pinned",
+    isPrivate: true,
+  });
+  // console.log(pinnedLotteries)
+      const { data:savedLotteries, isLoading:savedLoading, isError:savedError } = useClient({
+    queryKey: ["lotteriessaved" ],
+    url: "/lotteries/saved",
+    isPrivate: true,
+  });
+// console.log(savedLotteries)
 
   const savedNumbers = [
     { title: "Powerball Smart Pick #2", logo: PowerballLogo, numbers: [1, 2, 4, 6, 8], powerball: 6 },
@@ -165,7 +121,7 @@ const MyLottery = () => {
             exit={{ opacity: 0, y: -10 }}
             className="grid grid-cols-1 md:grid-cols-2 xlg:grid-cols-3 gap-6"
           >
-            {savedTickets.map((ticket, i) => (
+            {savedLotteries?.data?.map((ticket, i) => (
               <LotteryGameCard key={i} {...ticket} />
             ))}
           </motion.div>

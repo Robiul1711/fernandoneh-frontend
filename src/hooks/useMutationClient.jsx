@@ -17,9 +17,11 @@ const useMutationClient = ({
   const client = isPrivate ? useAxiosSecure() : useAxiosPublic();
 
   return useMutation({
-    mutationFn: async ({ data, config } = {}) => {
-      if (method === "delete") return await client.delete(url, config);
-      return await client[method](url, data, config);
+    mutationFn: async ({ data, config, url: dynamicUrl } = {}) => {
+      const finalUrl = dynamicUrl || url;
+      const lowerMethod = method.toLowerCase();
+      if (lowerMethod === "delete") return await client.delete(finalUrl, config);
+      return await client[lowerMethod](finalUrl, data, config);
     },
 
     onSuccess: (res) => {

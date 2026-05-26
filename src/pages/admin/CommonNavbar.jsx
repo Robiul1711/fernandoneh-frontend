@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
   Sun, 
@@ -23,7 +23,7 @@ const CommonNavbar = ({ open, setOpen }) => {
   const {user} = useSelector((state) => state.ui);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+const userDropdownRef = useRef(null);
   const { mutate: logout, isPending } = useMutationClient({
     url: "/logout",
     isPrivate: true,
@@ -42,6 +42,23 @@ const CommonNavbar = ({ open, setOpen }) => {
     );
   };
 
+
+  useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (
+      userDropdownRef.current &&
+      !userDropdownRef.current.contains(event.target)
+    ) {
+      setUserOpen(false);
+    }
+  };
+
+  document.addEventListener("mousedown", handleClickOutside);
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
   return (
     <motion.div 
       initial={{ y: -20, opacity: 0 }}
@@ -84,7 +101,7 @@ const CommonNavbar = ({ open, setOpen }) => {
         <LanguageArea />
 
         {/* User Profile Dropdown */}
-        <div className="relative">
+        <div className="relative" ref={userDropdownRef}>
           <button 
             onClick={() => {
               setUserOpen(!userOpen);

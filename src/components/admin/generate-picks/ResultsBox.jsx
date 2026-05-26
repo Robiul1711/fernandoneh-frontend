@@ -3,8 +3,21 @@ import { motion } from "motion/react";
 import { Bookmark } from "lucide-react";
 import PowerballLogo from "@/assets/images/powerball.png";
 import MegaMillionsLogo from "@/assets/images/megamillion.png";
+import useMutationClient from "@/hooks/useMutationClient";
 
-const ResultsBox = ({ isGenerated, selectedGame, pickType, generatedSets }) => {
+const ResultsBox = ({ isGenerated, selectedGame, pickType, generatedSets, confidenceScore, image }) => {
+  const { mutate, isPending } = useMutationClient({
+    url: '/lotteries/picks/save',
+    isPrivate: true,
+  });
+console.log(image)
+  const handleSave = () => {
+    mutate({
+      data: {
+        pick_id: image?.pick_id,
+      }
+    });
+  }
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -32,14 +45,14 @@ const ResultsBox = ({ isGenerated, selectedGame, pickType, generatedSets }) => {
               <div className="flex items-center gap-3 mb-1">
                 <h3 className="text-white text-xl font-bold">AI Confidence</h3>
                 <span className="bg-[#E8AC43]/10 text-[#E8AC43] text-[10px] font-black px-2 py-0.5 rounded uppercase">
-                  High
+                  {confidenceScore || "High"}
                 </span>
               </div>
               <p className="text-[#A1A1A1] text-xs">
                 (Based on frequency and overdue number analysis)
               </p>
             </div>
-            <button className="flex items-center gap-2 bg-[#1B7D31] hover:bg-[#23923c] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all">
+            <button onClick={handleSave} disabled={isPending} className="flex items-center gap-2 bg-[#1B7D31] hover:bg-[#23923c] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all">
               <Bookmark size={16} />
               <span>Save the generated numbers</span>
             </button>
@@ -97,12 +110,9 @@ before:duration-300
                   </div>
                 </div>
                 <div className="flex-shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
+                  {/* {console.log(image)} */}
                   <img
-                    src={
-                      selectedGame === "Power Ball"
-                        ? PowerballLogo
-                        : MegaMillionsLogo
-                    }
+                    src={image?.logo_url}
                     alt={selectedGame}
                     className="h-10 md:h-12 w-auto object-contain"
                   />
