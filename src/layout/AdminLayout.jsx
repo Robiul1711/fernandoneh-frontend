@@ -12,7 +12,9 @@ import {
   Bookmark, 
   Library, 
   Settings,
-  ShieldCheck
+  ShieldCheck,
+  CreditCard,
+  Crown
 } from "lucide-react";
 import { useUserProfile } from "@/hooks/fetchUserProfile";
 
@@ -65,6 +67,12 @@ const AdminLayout = () => {
       icon: <Settings size={20} />,
       text: "Settings",
       path: "/dashboard/settings",
+    },
+    {
+      id: 8,
+      icon: <Crown size={20} />,
+      text: "Subscription",
+      path: "/dashboard/subscription",
     },
   ];
   const location = useLocation();

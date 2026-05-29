@@ -22,16 +22,16 @@ console.log(image)
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-[#161616] border border-Primary/20 hover:border-Primary/50 transition-all duration-300 rounded-[32px] p-6 md:p-8 min-h-[300px]"
+      className="bg-[#161616] border border-Primary/20 hover:border-Primary/50 transition-all duration-300 rounded-[20px] xl:rounded-[32px] p-5 lg:p-6 xl:p-8 min-h-[250px] lg:min-h-[300px]"
     >
       {!isGenerated ? (
-        <div className="flex flex-col items-center justify-center h-full text-center space-y-4 min-h-[200px]">
-          <h3 className="text-white text-xl font-bold">
+        <div className="flex flex-col items-center justify-center h-full text-center space-y-3 min-h-[200px]">
+          <h3 className="text-base xl:text-xl font-bold text-white">
             Your Generated Lucky Numbers
           </h3>
-          <p className="text-[#A1A1A1] text-sm">Based on AI analysis</p>
-          <div className="py-12">
-            <p className="text-[#444444] text-sm font-medium">
+          <p className="text-[#A1A1A1] text-xs xl:text-sm">Based on AI analysis</p>
+          <div className="py-6 xl:py-12">
+            <p className="text-[#444444] text-xs xl:text-sm font-medium">
               You haven't generated any numbers yet. Click <br />
               <span className="text-[#666666]">‘Generate My Numbers’</span> to
               get started
@@ -39,21 +39,21 @@ console.log(image)
           </div>
         </div>
       ) : (
-        <div className="space-y-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div className="space-y-6 xl:space-y-8">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <div className="flex items-center gap-3 mb-1">
-                <h3 className="text-white text-xl font-bold">AI Confidence</h3>
-                <span className="bg-[#E8AC43]/10 text-[#E8AC43] text-[10px] font-black px-2 py-0.5 rounded uppercase">
+              <div className="flex items-center gap-2.5 mb-1">
+                <h3 className="text-white text-base xl:text-xl font-bold">AI Confidence</h3>
+                <span className="bg-[#E8AC43]/10 text-[#E8AC43] text-[9px] xl:text-[10px] font-black px-2 py-0.5 rounded uppercase">
                   {confidenceScore || "High"}
                 </span>
               </div>
-              <p className="text-[#A1A1A1] text-xs">
+              <p className="text-[#A1A1A1] text-[10px] xl:text-xs">
                 (Based on frequency and overdue number analysis)
               </p>
             </div>
-            <button onClick={handleSave} disabled={isPending} className="flex items-center gap-2 bg-[#1B7D31] hover:bg-[#23923c] text-white px-6 py-2.5 rounded-xl text-xs font-bold transition-all">
-              <Bookmark size={16} />
+            <button onClick={handleSave} disabled={isPending} className="flex items-center gap-2 bg-[#1B7D31] hover:bg-[#23923c] text-white px-4 xl:px-6 py-2 xl:py-2.5 rounded-lg xl:rounded-xl text-[10px] xl:text-xs font-bold transition-all">
+              <Bookmark size={15} />
               <span>Save the generated numbers</span>
             </button>
           </div>
@@ -69,9 +69,9 @@ console.log(image)
 relative overflow-hidden
 bg-[#0D0D0D]
 border border-white/10
-rounded-[24px]
-p-6 md:px-8
-flex flex-col md:flex-row
+rounded-xl xl:rounded-[24px]
+p-4 xl:p-6 xl:px-8
+flex flex-col sm:flex-row
 justify-between items-center
 gap-6
 transition-all duration-300
@@ -90,36 +90,36 @@ before:transition-opacity
 before:duration-300
 "
               >
-                <div className="space-y-4 w-full md:w-auto">
-                  <p className="text-[#A1A1A1] text-sm font-medium group-hover:text-white">
+                <div className="space-y-3 xl:space-y-4 w-full sm:w-auto">
+                  <p className="text-[#A1A1A1] text-xs xl:text-sm font-medium group-hover:text-white">
                     {selectedGame} {pickType === "smart" ? "Smart" : "Quick"}{" "}
                     Pick #{idx + 1}
                   </p>
-                  <div className="flex flex-wrap gap-3">
+                  <div className="flex flex-wrap gap-2 xl:gap-3">
                     {set.numbers.map((num, i) => (
                       <div
                         key={i}
-                        className="w-10 h-10 rounded-full bg-[#E8EBEE] text-[#111111] flex items-center justify-center font-bold shadow-[inset_4.032px_4.032px_9.408px_rgba(136,150,163,0.58),inset_-4.032px_-4.032px_9.408px_#FFF]"
+                        className="w-7 h-7 xl:w-9 xl:h-9 rounded-full bg-[#E8EBEE] text-[#111111] flex items-center justify-center text-[10px] xl:text-sm font-bold shadow-[inset_4.032px_4.032px_9.408px_rgba(136,150,163,0.58),inset_-4.032px_-4.032px_9.408px_#FFF]"
                       >
                         {num < 10 ? `0${num}` : num}
                       </div>
                     ))}
-                    <div className="w-10 h-10 rounded-full bg-[#E93737] text-white flex items-center justify-center font-bold shadow-[inset_0_5.376px_5.376px_rgba(255,248,248,0.51)]">
+                    <div className="w-7 h-7 xl:w-9 xl:h-9 rounded-full bg-[#E93737] text-white flex items-center justify-center text-[10px] xl:text-sm font-bold shadow-[inset_0_5.376px_5.376px_rgba(255,248,248,0.51)]">
                       {set.powerball < 10 ? `0${set.powerball}` : set.powerball}
                     </div>
                   </div>
                 </div>
                 <div className="flex-shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
-                  {/* {console.log(image)} */}
                   <img
                     src={image?.logo_url}
                     alt={selectedGame}
-                    className="h-10 md:h-12 w-auto object-contain"
+                    className="h-8 lg:h-9 xl:h-12 w-auto object-contain"
                   />
                 </div>
               </motion.div>
             ))}
           </div>
+
         </div>
       )}
     </motion.div>

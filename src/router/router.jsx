@@ -19,6 +19,7 @@ import MythsVsFactsPage from "@/pages/admin/intelligence-library/MythsVsFactsPag
 import ResponsiblePlayPage from "@/pages/admin/intelligence-library/ResponsiblePlayPage";
 import SmartPicksPage from "@/pages/admin/intelligence-library/SmartPicksPage";
 import SettingsPage from "@/pages/admin/settings/SettingsPage";
+import SubscriptionPage from "@/pages/admin/subscription/SubscriptionPage";
 
 import { createBrowserRouter } from "react-router-dom";
 
@@ -102,6 +103,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/settings",
         element: <SettingsPage />,
+      },
+      {
+        path: "/dashboard/subscription",
+        element: <SubscriptionPage />,
       },
     ],
   },
