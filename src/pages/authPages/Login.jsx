@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux'
 import Logo from '../../assets/images/logo.png'
 import useMutationClient from '@/hooks/useMutationClient'
 import { setAuth } from '@/redux/slices/authSlice'
-import { useGoogleLogin } from '@react-oauth/google'
+// import { useGoogleLogin } from '@react-oauth/google'
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -53,31 +53,31 @@ const Login = () => {
     successMessage: 'Login successful!',
   })
 
-  const handleGoogleLogin = useGoogleLogin({
-    onSuccess: (tokenResponse) => {
-      socialLoginMutate(
-        {
-          data: {
-            provider: 'google',
-            token: tokenResponse.access_token,
-          },
-        },
-        {
-          onSuccess: (res) => {
-            const resData = res?.data
-            dispatch(setAuth({
-              token: resData?.access_token,
-              user: resData?.data,
-            }))
-            navigate('/dashboard')
-          },
-        }
-      )
-    },
-    onError: (error) => {
-      console.error('Google Login Failed:', error)
-    },
-  })
+  // const handleGoogleLogin = useGoogleLogin({
+  //   onSuccess: (tokenResponse) => {
+  //     socialLoginMutate(
+  //       {
+  //         data: {
+  //           provider: 'google',
+  //           token: tokenResponse.access_token,
+  //         },
+  //       },
+  //       {
+  //         onSuccess: (res) => {
+  //           const resData = res?.data
+  //           dispatch(setAuth({
+  //             token: resData?.access_token,
+  //             user: resData?.data,
+  //           }))
+  //           navigate('/dashboard')
+  //         },
+  //       }
+  //     )
+  //   },
+  //   onError: (error) => {
+  //     console.error('Google Login Failed:', error)
+  //   },
+  // })
 
   const password = watch('password', '')
   const isPasswordStrong = password.length >= 8
@@ -194,7 +194,7 @@ const Login = () => {
         {/* Google Button */}
         <button
           type="button"
-          onClick={() => handleGoogleLogin()}
+          // onClick={() => handleGoogleLogin()}
           disabled={isPending || isSocialPending}
           className="w-full py-3 px-4 rounded-xl font-medium text-white bg-[#1A1A1A] border border-[#333333] hover:bg-[#262626] transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
         >
