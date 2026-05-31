@@ -157,6 +157,7 @@ const MyLottery = () => {
         </div>
       </div>
 
+
       {/* Content Area */}
       <AnimatePresence mode="wait">
         {activeTab === 'tickets' ? (
