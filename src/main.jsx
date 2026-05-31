@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "./redux/store";
 import { Toaster } from "sonner";
-// import { GoogleOAuthProvider } from "@react-oauth/google";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const queryClient = new QueryClient();
 
@@ -18,10 +18,10 @@ createRoot(document.getElementById("root")).render(
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          {/* <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}> */}
-          <RouterProvider router={router} />
-          <Toaster position="bottom-right" richColors />
-          {/* </GoogleOAuthProvider> */}
+          <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+            <RouterProvider router={router} />
+            <Toaster position="bottom-right" richColors />
+          </GoogleOAuthProvider>
           {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </PersistGate>
       </Provider>
