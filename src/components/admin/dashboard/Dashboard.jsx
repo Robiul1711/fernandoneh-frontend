@@ -1,28 +1,33 @@
-import React from 'react';
-import { motion } from 'motion/react';
-import { ChevronRight, ShieldCheck } from 'lucide-react';
-import JackpotCard from './JackpotCard';
-import AIBanner from './AIBanner';
-import GeneratedNumbers from './GeneratedNumbers';
-import AIAnalysis from './AIAnalysis';
-import MoreGames from './MoreGames';
+import React from "react";
+import { motion } from "motion/react";
+import { ChevronRight, ShieldCheck } from "lucide-react";
+import JackpotCard from "./JackpotCard";
+import AIBanner from "./AIBanner";
+import GeneratedNumbers from "./GeneratedNumbers";
+import AIAnalysis from "./AIAnalysis";
+import MoreGames from "./MoreGames";
+import { JackpotCardSkeleton } from "@/components/shared/Skeleton";
 
 // Import the generated bot image
-import BotImage from '@/assets/images/winingnumber.png';
-import PowerballLogo from '@/assets/images/powerball.png';
-import MegaMillionsLogo from '@/assets/images/megamillion.png';
-import useClient from '@/hooks/useClient';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import BotImage from "@/assets/images/winingnumber.png";
+import PowerballLogo from "@/assets/images/powerball.png";
+import MegaMillionsLogo from "@/assets/images/megamillion.png";
+import useClient from "@/hooks/useClient";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
 
 // Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 const Dashboard = () => {
-        const { data:pinnedLotteries, isLoading:pinnedLoading, isError:pinnedError } = useClient({
-    queryKey: ["lotteriespinned" ],
+  const {
+    data: pinnedLotteries,
+    isLoading: pinnedLoading,
+    isError: pinnedError,
+  } = useClient({
+    queryKey: ["lotteriespinned"],
     url: "/lotteries/pinned",
     isPrivate: true,
   });
@@ -32,9 +37,9 @@ const Dashboard = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1
-      }
-    }
+        staggerChildren: 0.1,
+      },
+    },
   };
 
   const itemVariants = {
@@ -45,13 +50,13 @@ const Dashboard = () => {
       transition: {
         type: "spring",
         stiffness: 100,
-        damping: 15
-      }
-    }
+        damping: 15,
+      },
+    },
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial="hidden"
       animate="visible"
       variants={containerVariants}
@@ -59,15 +64,21 @@ const Dashboard = () => {
     >
       {/* Top Section: Main Jackpot Cards */}
       <motion.div variants={itemVariants}>
-        {pinnedLotteries?.data?.length > 2 ? (
+        {pinnedLoading ? (
+          <div className="grid grid-cols-1 xlg:grid-cols-2 gap-6">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <JackpotCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : pinnedLotteries?.data?.length > 2 ? (
           <div className="relative group">
             <Swiper
               modules={[Navigation, Pagination, Autoplay]}
               spaceBetween={24}
               slidesPerView={1}
               navigation={{
-                nextEl: '.swiper-jackpot-next',
-                prevEl: '.swiper-jackpot-prev',
+                nextEl: ".swiper-jackpot-next",
+                prevEl: ".swiper-jackpot-prev",
               }}
               autoplay={{ delay: 5000, disableOnInteraction: false }}
               breakpoints={{
@@ -82,7 +93,7 @@ const Dashboard = () => {
                 </SwiperSlide>
               ))}
             </Swiper>
-            
+
             {/* Custom Navigation Buttons */}
             <button className="swiper-jackpot-prev absolute left-[-20px] top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-[#1A1A1A] border border-[#E8AC43]/30 rounded-full flex items-center justify-center text-[#E8AC43] opacity-0 group-hover:opacity-100 transition-opacity disabled:hidden">
               <ChevronRight size={20} className="rotate-180" />
@@ -106,7 +117,10 @@ const Dashboard = () => {
       </motion.div>
 
       {/* Middle Section: Numbers & Analysis */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 xlg:grid-cols-2 gap-6">
+      <motion.div
+        variants={itemVariants}
+        className="grid grid-cols-1 xlg:grid-cols-2 gap-6"
+      >
         <GeneratedNumbers logo={PowerballLogo} />
         <AIAnalysis />
       </motion.div>
@@ -117,7 +131,7 @@ const Dashboard = () => {
       </motion.div>
 
       {/* Footer Meta */}
-      <motion.div 
+      <motion.div
         variants={itemVariants}
         className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-[#1A1A1A] gap-4"
       >
