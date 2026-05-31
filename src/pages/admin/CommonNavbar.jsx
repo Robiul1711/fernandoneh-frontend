@@ -136,7 +136,7 @@ const CommonNavbar = ({ open, setOpen }) => {
       </div>
 
       {/* Right Section: Actions */}
-      <div className="flex items-center gap-3 md:gap-6">
+      <div className="flex items-center gap-3">
         {/* Notifications */}
         <button className="relative p-2 text-[#A1A1A1] hover:text-white transition-colors">
           <Bell size={22} />

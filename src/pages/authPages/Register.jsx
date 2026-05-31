@@ -234,7 +234,7 @@ const Register = () => {
             />
           </div>
           <label htmlFor="terms" className="text-white text-sm cursor-pointer select-none">
-            I have read, and agree with <span className="text-[#E8AC43] font-medium">Terms of services</span> &amp; <span className="text-[#E8AC43] font-medium">Privacy policy</span>
+            I have read, and agree with <Link to="/terms"className="text-[#E8AC43] font-medium">Terms of services</Link> &amp; <Link to="/privacy"className="text-[#E8AC43] font-medium">Privacy policy</Link>
           </label>
         </div>
 

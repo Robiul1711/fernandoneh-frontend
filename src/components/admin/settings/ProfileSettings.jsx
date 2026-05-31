@@ -215,6 +215,36 @@ const ProfileSettings = () => {
                 <p className="text-red-500 text-xs">{errors.address.message}</p>
               )}
             </div>
+            {/* State */}
+            <div className="space-y-2">
+              <label className="text-gray-400 text-sm font-medium">
+                State
+              </label>
+              <input
+                value={user?.state}
+                {...register("state", { required: "State is required" })}
+                className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/20 transition-colors"
+                placeholder="Enter your state"
+              />
+              {errors.state && (
+                <p className="text-red-500 text-xs">{errors.state.message}</p>
+              )}
+            </div>
+            {/* City */}
+            <div className="space-y-2">
+              <label className="text-gray-400 text-sm font-medium">
+                City
+              </label>
+              <input
+                value={user?.city}
+                {...register("city", { required: "City is required" })}
+                className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-white/20 transition-colors"
+                placeholder="Enter your city"
+              />
+              {errors.city && (
+                <p className="text-red-500 text-xs">{errors.city.message}</p>
+              )}
+            </div>
           </div>
         </div>
 

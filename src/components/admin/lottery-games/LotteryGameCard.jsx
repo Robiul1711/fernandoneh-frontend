@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { MoreVertical, Pin, Bookmark } from "lucide-react";
 import pattern from "@/assets/images/pattern.png";
 import useMutationClient from "@/hooks/useMutationClient";
+import { LotteryGameCardSkeleton } from "@/components/shared/Skeleton";
 
 const LotteryGameCard = ({
   logo_url,
@@ -21,6 +22,7 @@ const LotteryGameCard = ({
   is_saved,
   isPinned,
   isSaved,
+  isLoading
 }) => {
   // console.log(latest_numbers)
   const [menuOpen, setMenuOpen] = useState(false);
@@ -87,6 +89,9 @@ const LotteryGameCard = ({
 
     return `$${numericValue.toLocaleString()}`;
   };
+
+  if (isLoading) return <LotteryGameCardSkeleton />;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -160,6 +165,38 @@ const LotteryGameCard = ({
               className="absolute right-0 top-full mt-2 w-40 bg-[#1A1A1A] border border-white/10 rounded-xl shadow-2xl z-20 overflow-hidden"
             >
               {/* Menu items */}
+                <button
+                      onClick={() =>
+                        isPinnedGame ? handleUnpinClick() : handlePinClick()
+                      }
+                      className="w-full flex items-center gap-3 px-4 py-3 text-xs text-[#A1A1A1] hover:text-white hover:bg-white/5 transition-all text-left"
+                    >
+                      <Pin
+                        size={14}
+                        className={
+                          isPinnedGame ? "fill-[#E8AC43] text-[#E8AC43]" : ""
+                        }
+                      />
+                      <span>
+                        {isPinnedGame ? "Unpin the lottery" : "Pin the lottery"}
+                      </span>
+                    </button>
+                    <button
+                      onClick={() =>
+                        isSavedGame ? handleUnsaveClick() : handleSaveClick()
+                      }
+                      className="w-full flex items-center gap-3 px-4 py-3 text-xs text-[#A1A1A1] hover:text-white hover:bg-white/5 transition-all text-left border-t border-white/5"
+                    >
+                      <Bookmark
+                        size={14}
+                        className={
+                          isSavedGame ? "fill-[#E8AC43] text-[#E8AC43]" : ""
+                        }
+                      />
+                      <span>
+                        {isSavedGame ? "Unsave lottery" : "Save lottery"}
+                      </span>
+                    </button>
             </motion.div>
           </>
         )}

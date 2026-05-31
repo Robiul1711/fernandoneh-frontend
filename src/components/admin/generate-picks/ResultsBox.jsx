@@ -9,6 +9,7 @@ const ResultsBox = ({ isGenerated, selectedGame, pickType, generatedSets, confid
   const { mutate, isPending } = useMutationClient({
     url: '/lotteries/picks/save',
     isPrivate: true,
+    invalidateKeys: [['lotteriessavedpicks']],
   });
 console.log(image)
   const handleSave = () => {

@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import { ChevronRight, MoreVertical, Pin } from 'lucide-react';
+import { Bookmark, ChevronRight, MoreVertical, Pin } from 'lucide-react';
 import GameDetailsModal from './GameDetailsModal';
+import { LotteryGameCardSkeleton } from '@/components/shared/Skeleton';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -18,9 +19,59 @@ import Fantasy5Logo from '@/assets/images/fantasy.png';
 import NumbersGameLogo from '@/assets/images/numbergame.png';
 import { Link } from 'react-router-dom';
 import useClient from '@/hooks/useClient';
+import useMutationClient from '@/hooks/useMutationClient';
 
-const MoreGamesCard = ({ logo_url, name, next_draw_at, draw_closes_at, jackpot, multiplier, special_number, latest_numbers, onClick }) => {
+const MoreGamesCard = ({ logo_url, id,name, next_draw_at, draw_closes_at, jackpot, multiplier, special_number, latest_numbers, onClick, is_pinned, is_saved, isPinned, isSaved}) => {
   const [menuOpen, setMenuOpen] = useState(false);
+    const isPinnedGame = is_pinned || isPinned;
+  const isSavedGame = is_saved || isSaved;
+  
+  const { mutate: saveLottery } = useMutationClient({
+    url: "/lotteries/save",
+    isPrivate: true,
+    invalidateKeys: [["lotterygames"], ["lotteriessaved"]],
+  });
+
+  const { mutate: unsaveLottery } = useMutationClient({
+    method: "delete",
+    isPrivate: true,
+    invalidateKeys: [["lotterygames"], ["lotteriessaved"]],
+  });
+
+  const handleSaveClick = () => {
+    saveLottery({ data: { lottery_id: id } });
+    setMenuOpen(false);
+  };
+
+  const handleUnsaveClick = () => {
+    unsaveLottery({ url: `/lotteries/save/${id}` });
+    setMenuOpen(false);
+  };
+
+  const { mutate: pinLottery } = useMutationClient({
+    url: "/lotteries/pin",
+    isPrivate: true,
+    invalidateKeys: [["lotterygames"], ["lotteriespinned"]],
+  });
+
+  const { mutate: unpinLottery } = useMutationClient({
+    method: "delete",
+    isPrivate: true,
+    invalidateKeys: [["lotterygames"], ["lotteriespinned"]],
+  });
+
+  const handlePinClick = () => {
+    pinLottery({ data: { lottery_id: id } });
+    setMenuOpen(false);
+  };
+
+  const handleUnpinClick = () => {
+    unpinLottery({ url: `/lotteries/pin/${id}` });
+    setMenuOpen(false);
+  };
+
+
+
     const formatJackpot = (value) => {
     if (!value) return "$0";
 
@@ -109,6 +160,38 @@ const MoreGamesCard = ({ logo_url, name, next_draw_at, draw_closes_at, jackpot, 
               className="absolute right-0 top-full mt-2 w-40 bg-[#1A1A1A] border border-white/10 rounded-xl shadow-2xl z-20 overflow-hidden"
             >
               {/* Menu items */}
+                <button
+                      onClick={() =>
+                        isPinnedGame ? handleUnpinClick() : handlePinClick()
+                      }
+                      className="w-full flex items-center gap-3 px-4 py-3 text-xs text-[#A1A1A1] hover:text-white hover:bg-white/5 transition-all text-left"
+                    >
+                      <Pin
+                        size={14}
+                        className={
+                          isPinnedGame ? "fill-[#E8AC43] text-[#E8AC43]" : ""
+                        }
+                      />
+                      <span>
+                        {isPinnedGame ? "Unpin the lottery" : "Pin the lottery"}
+                      </span>
+                    </button>
+                    <button
+                      onClick={() =>
+                        isSavedGame ? handleUnsaveClick() : handleSaveClick()
+                      }
+                      className="w-full flex items-center gap-3 px-4 py-3 text-xs text-[#A1A1A1] hover:text-white hover:bg-white/5 transition-all text-left border-t border-white/5"
+                    >
+                      <Bookmark
+                        size={14}
+                        className={
+                          isSavedGame ? "fill-[#E8AC43] text-[#E8AC43]" : ""
+                        }
+                      />
+                      <span>
+                        {isSavedGame ? "Unsave lottery" : "Save lottery"}
+                      </span>
+                    </button>
             </motion.div>
           </>
         )}
@@ -210,11 +293,17 @@ const MoreGames = () => {
           }}
           className="!py-1"
         >
-          {lotteryGames?.data?.map((game, i) => (
-            <SwiperSlide key={i}>
-              <MoreGamesCard {...game} onClick={() => handleCardClick(game)} />
-            </SwiperSlide>
-          ))}
+          {isLoading
+            ? Array.from({ length: 3 }).map((_, i) => (
+                <SwiperSlide key={i}>
+                  <LotteryGameCardSkeleton />
+                </SwiperSlide>
+              ))
+            : lotteryGames?.data?.map((game, i) => (
+                <SwiperSlide key={i}>
+                  <MoreGamesCard {...game} onClick={() => handleCardClick(game)} />
+                </SwiperSlide>
+              ))}
         </Swiper>
 
         {/* Custom Navigation Buttons */}

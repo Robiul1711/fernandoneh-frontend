@@ -21,7 +21,15 @@ import SmartPicksPage from "@/pages/admin/intelligence-library/SmartPicksPage";
 import SettingsPage from "@/pages/admin/settings/SettingsPage";
 import SubscriptionPage from "@/pages/admin/subscription/SubscriptionPage";
 
+// Static / Utility Pages
+import TermsPage from "@/pages/TermsPage";
+import PrivacyPage from "@/pages/PrivacyPage";
+import PaymentSuccessPage from "@/pages/PaymentSuccessPage";
+import PaymentCancelPage from "@/pages/PaymentCancelPage";
+import NotFoundPage from "@/pages/NotFoundPage";
+
 import { createBrowserRouter } from "react-router-dom";
+import PrivateRoute from "@/router/PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -50,65 +58,91 @@ const router = createBrowserRouter([
       },
     ],
   },
-  // Admin routes
+  // Protected admin routes — requires authentication
   {
-    path: "/dashboard",
-    element: <AdminLayout />,
+    element: <PrivateRoute />,
     children: [
       {
         path: "/dashboard",
-        element: <DashboardPage />,
-      },
-      {
-        path: "/dashboard/generate-picks",
-        element: <GeneratePicksPage />,
-      },
-      {
-        path: "/dashboard/past-results",
-        element: <PastResultsPage />,
-      },
-
-      {
-        path: "/dashboard/lottery-games",
-        element: <LotteryGamesPage />,
-      },
-      {
-        path: "/dashboard/my-lottery",
-        element: <MyLotteryPage />,
-      },
-      {
-        path: "/dashboard/intelligence-library",
-        element: <IntelligenceLibraryPage />,
-      },
-      {
-        path: "/dashboard/intelligence-library/beginner-guide",
-        element: <BeginnersGuidePage />,
-      },
-      {
-        path: "/dashboard/intelligence-library/hot-cold-numbers",
-        element: <HotColdNumbersPage />,
-      },
-      {
-        path: "/dashboard/intelligence-library/myths-vs-facts",
-        element: <MythsVsFactsPage />,
-      },
-      {
-        path: "/dashboard/intelligence-library/responsible-play",
-        element: <ResponsiblePlayPage />,
-      },
-      {
-        path: "/dashboard/intelligence-library/smart-picks",
-        element: <SmartPicksPage />,
-      },
-      {
-        path: "/dashboard/settings",
-        element: <SettingsPage />,
-      },
-      {
-        path: "/dashboard/subscription",
-        element: <SubscriptionPage />,
+        element: <AdminLayout />,
+        children: [
+          {
+            path: "/dashboard",
+            element: <DashboardPage />,
+          },
+          {
+            path: "/dashboard/generate-picks",
+            element: <GeneratePicksPage />,
+          },
+          {
+            path: "/dashboard/past-results",
+            element: <PastResultsPage />,
+          },
+          {
+            path: "/dashboard/lottery-games",
+            element: <LotteryGamesPage />,
+          },
+          {
+            path: "/dashboard/my-lottery",
+            element: <MyLotteryPage />,
+          },
+          {
+            path: "/dashboard/intelligence-library",
+            element: <IntelligenceLibraryPage />,
+          },
+          {
+            path: "/dashboard/intelligence-library/beginner-guide",
+            element: <BeginnersGuidePage />,
+          },
+          {
+            path: "/dashboard/intelligence-library/hot-cold-numbers",
+            element: <HotColdNumbersPage />,
+          },
+          {
+            path: "/dashboard/intelligence-library/myths-vs-facts",
+            element: <MythsVsFactsPage />,
+          },
+          {
+            path: "/dashboard/intelligence-library/responsible-play",
+            element: <ResponsiblePlayPage />,
+          },
+          {
+            path: "/dashboard/intelligence-library/smart-picks",
+            element: <SmartPicksPage />,
+          },
+          {
+            path: "/dashboard/settings",
+            element: <SettingsPage />,
+          },
+          {
+            path: "/dashboard/subscription",
+            element: <SubscriptionPage />,
+          },
+        ],
       },
     ],
+  },
+  // Static / Utility Pages (no layout wrapper)
+  {
+    path: "/terms",
+    element: <TermsPage />,
+  },
+  {
+    path: "/privacy",
+    element: <PrivacyPage />,
+  },
+  {
+    path: "/payment/success",
+    element: <PaymentSuccessPage />,
+  },
+  {
+    path: "/payment/cancel",
+    element: <PaymentCancelPage />,
+  },
+  // 404 catch-all
+  {
+    path: "*",
+    element: <NotFoundPage />,
   },
 ]);
 

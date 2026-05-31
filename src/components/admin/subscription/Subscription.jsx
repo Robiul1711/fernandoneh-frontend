@@ -41,6 +41,7 @@ const Subscription = () => {
   });
 
   const handlePlanAction = (plan) => {
+    console.log("click")
     // Call checkout api for paid plans
     const formData = new FormData();
     formData.append("plan_id", plan.id);
@@ -101,7 +102,7 @@ const Subscription = () => {
 
   if (isPlansLoading || isSubLoading) {
     return (
-      <div className="min-h-screen bg-[#0D0D0D] flex items-center justify-center">
+      <div className="min-h-[80vh] bg-[#0D0D0D] flex items-center justify-center">
         <Loader2 className="text-[#E8AC43] animate-spin" size={36} />
       </div>
     );
@@ -214,7 +215,7 @@ const Subscription = () => {
                 {/* Button */}
                 <button
                   onClick={() => handlePlanAction(plan)}
-                  disabled={isSelected || isCheckoutPending}
+                  // disabled={isSelected || isCheckoutPending}
                   className={`w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 mb-5 ${
                     isSelected
                       ? "bg-[#1B7D31] text-white cursor-default"
