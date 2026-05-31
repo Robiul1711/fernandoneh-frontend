@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { 
   Sun, 
+  Sunrise,
+  Sunset,
+  Moon,
   Bell, 
   Globe, 
   ChevronDown, 
@@ -17,13 +20,58 @@ import { Link, useNavigate } from "react-router-dom";
 import useMutationClient from "@/hooks/useMutationClient";
 import { clearAuth } from "@/redux/slices/authSlice";
 
+const getGreetingDetails = () => {
+  const hour = new Date().getHours();
+  if (hour >= 5 && hour < 12) {
+    return {
+      text: "Good Morning",
+      Icon: Sunrise,
+      colorClass: "text-[#E8AC43]",
+      bgClass: "bg-[#E8AC43]/10",
+      emoji: "👋",
+    };
+  } else if (hour >= 12 && hour < 17) {
+    return {
+      text: "Good Afternoon",
+      Icon: Sun,
+      colorClass: "text-[#F59E0B]",
+      bgClass: "bg-[#F59E0B]/10",
+      emoji: "☀️",
+    };
+  } else if (hour >= 17 && hour < 21) {
+    return {
+      text: "Good Evening",
+      Icon: Sunset,
+      colorClass: "text-[#F97316]",
+      bgClass: "bg-[#F97316]/10",
+      emoji: "🌇",
+    };
+  } else {
+    return {
+      text: "Good Night",
+      Icon: Moon,
+      colorClass: "text-[#A78BFA]",
+      bgClass: "bg-[#A78BFA]/10",
+      emoji: "🌙",
+    };
+  }
+};
+
 const CommonNavbar = ({ open, setOpen }) => {
   const [langOpen, setLangOpen] = useState(false);
   const [userOpen, setUserOpen] = useState(false);
   const {user} = useSelector((state) => state.ui);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-const userDropdownRef = useRef(null);
+  const userDropdownRef = useRef(null);
+  const [greeting, setGreeting] = useState(() => getGreetingDetails());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setGreeting(getGreetingDetails());
+    }, 60000);
+    return () => clearInterval(timer);
+  }, []);
   const { mutate: logout, isPending } = useMutationClient({
     url: "/logout",
     isPrivate: true,
@@ -71,17 +119,17 @@ const userDropdownRef = useRef(null);
         {/* Mobile Sidebar Toggle */}
         <button 
           onClick={() => setOpen(true)}
-          className="lg:hidden p-2 text-[#A1A1A1] hover:text-[#E8AC43] transition-colors bg-[#1A1A1A] rounded-lg"
+          className="xl:hidden p-2 text-[#A1A1A1] hover:text-[#E8AC43] transition-colors bg-[#1A1A1A] rounded-lg"
         >
           <Menu size={20} />
         </button>
 
-        <div className="bg-[#E8AC43]/10 p-2 rounded-xl hidden xs:flex">
-          <Sun className="text-[#E8AC43]" size={22} />
+        <div className={`${greeting.bgClass} p-2 rounded-xl hidden xs:flex`}>
+          <greeting.Icon className={greeting.colorClass} size={22} />
         </div>
         <div className="hidden sm:block">
           <h2 className="text-white text-sm md:text-lg font-bold flex items-center gap-2 leading-none mb-0.5 md:mb-1">
-            Good Morning, {user?.name} <span className="text-base md:text-lg">👋</span>
+            {greeting.text}, {user?.name} <span className="text-base md:text-lg">{greeting.emoji}</span>
           </h2>
           <p className="text-[#A1A1A1] text-[9px] md:text-xs font-medium uppercase tracking-wider">Play Smarter With AI.</p>
         </div>

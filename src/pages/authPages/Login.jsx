@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux'
 import Logo from '../../assets/images/logo.png'
 import useMutationClient from '@/hooks/useMutationClient'
 import { setAuth } from '@/redux/slices/authSlice'
+import { useGoogleLogin } from '@react-oauth/google'
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -46,6 +47,37 @@ const Login = () => {
       }
     )
   }
+
+  const { mutate: socialLoginMutate, isPending: isSocialPending } = useMutationClient({
+    url: '/social-login',
+    successMessage: 'Login successful!',
+  })
+
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      socialLoginMutate(
+        {
+          data: {
+            provider: 'google',
+            token: tokenResponse.access_token,
+          },
+        },
+        {
+          onSuccess: (res) => {
+            const resData = res?.data
+            dispatch(setAuth({
+              token: resData?.access_token,
+              user: resData?.data,
+            }))
+            navigate('/dashboard')
+          },
+        }
+      )
+    },
+    onError: (error) => {
+      console.error('Google Login Failed:', error)
+    },
+  })
 
   const password = watch('password', '')
   const isPasswordStrong = password.length >= 8
@@ -122,7 +154,7 @@ const Login = () => {
         {/* Login Button */}
         <button
           type="submit"
-          disabled={isPending}
+          disabled={isPending || isSocialPending}
           className="w-full py-3 px-4 rounded-xl font-bold text-[#0D0D0D] bg-gradient-to-r from-[#E8AC43] to-[#AF7523] hover:opacity-90 transition-all text-lg shadow-[0_4px_20px_rgba(232,172,67,0.3)] disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {isPending ? 'Logging in...' : 'Login'}
@@ -162,10 +194,12 @@ const Login = () => {
         {/* Google Button */}
         <button
           type="button"
-          className="w-full py-3 px-4 rounded-xl font-medium text-white bg-[#1A1A1A] border border-[#333333] hover:bg-[#262626] transition-all flex items-center justify-center gap-2"
+          onClick={() => handleGoogleLogin()}
+          disabled={isPending || isSocialPending}
+          className="w-full py-3 px-4 rounded-xl font-medium text-white bg-[#1A1A1A] border border-[#333333] hover:bg-[#262626] transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
         >
           <FcGoogle size={22} />
-          <span>Continue with Google</span>
+          <span>{isSocialPending ? 'Logging in with Google...' : 'Continue with Google'}</span>
         </button>
 
         {/* Footer */}

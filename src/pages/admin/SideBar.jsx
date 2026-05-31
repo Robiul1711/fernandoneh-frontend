@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "motion/react";
 import { Link, useLocation } from "react-router-dom";
-import { ShieldCheck, Menu, X } from "lucide-react";
+import { ShieldCheck, Menu, X, Crown } from "lucide-react";
 import Logo from "../../assets/images/logo.png";
 
 const SideBar = ({ sidebar, open, setOpen }) => {
@@ -10,14 +10,6 @@ const SideBar = ({ sidebar, open, setOpen }) => {
 
   return (
     <>
-      {/* Mobile Menu Button */}
-      <button
-        className="xl:hidden fixed top-4 left-4 z-[250] p-2 bg-[#1A1A1A] rounded-lg text-white"
-        onClick={() => setOpen(!open)}
-      >
-        {open ? <X size={24} /> : <Menu size={24} />}
-      </button>
-
       {/* Overlay for mobile */}
       <div
         className={`fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 xl:hidden z-[200] ${
@@ -28,12 +20,12 @@ const SideBar = ({ sidebar, open, setOpen }) => {
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed xl:static top-0 left-0 h-screen w-80 bg-[#0D0D0D] border-r border-Primary/20 flex flex-col transition-transform duration-300 z-[210] ${
+        className={`fixed xl:static top-0 left-0 h-screen w-72 xl:w-80 bg-[#0D0D0D] border-r border-Primary/20 flex flex-col transition-transform duration-300 z-[210] ${
           open ? "translate-x-0" : "-translate-x-full xl:translate-x-0"
         }`}
       >
         {/* Logo Section */}
-        <div className="p-8 flex flex-col items-center text-center">
+        <div className="p-8 flex flex-col items-center text-center relative">
           <Link to="/" className="flex flex-col items-center">
             <img
               src={Logo}
@@ -41,6 +33,12 @@ const SideBar = ({ sidebar, open, setOpen }) => {
               className="w-24 xl:w-32 h-auto"
             />
           </Link>
+          <button
+            className="xl:hidden absolute top-4 right-4 p-2 text-[#A1A1A1] hover:text-white transition-colors bg-[#1A1A1A]/40 rounded-lg"
+            onClick={() => setOpen(false)}
+          >
+            <X size={20} />
+          </button>
         </div>
 
         {/* Navigation Menu */}
@@ -96,22 +94,25 @@ const SideBar = ({ sidebar, open, setOpen }) => {
           </ul>
         </nav>
 
-        {/* Security Box */}
-        <div className="p-4 mt-auto">
-          <div className="bg-[#1A1A1A]/40 border border-[#1B7D31]/20 rounded-2xl p-5 flex items-start gap-4">
-            <div className="bg-[#1B7D31]/10 p-2 rounded-xl">
-              <ShieldCheck className="text-[#1B7D31]" size={24} />
-            </div>
-            <div>
-              <h4 className="text-[#1B7D31] text-xs font-bold uppercase tracking-wider mb-1">
-                Secure & Private
-              </h4>
-              <p className="text-[#A1A1A1] text-[10px] leading-relaxed">
-                Your data is always safe and never shared
-              </p>
-            </div>
-          </div>
-        </div>
+<div className="bg-[#1F1F1F] rounded-2xl p-3 m-4">
+  <Crown size={20} className="text-[#E7D487] mb-3" />
+
+  <h3 className="text-white text-sm font-semibold mb-1">
+    Upgrade to Pro
+  </h3>
+
+  <p className="text-[#BDBDBD] text-[11px] leading-4 mb-3">
+    Unlock all features
+  </p>
+
+  <Link 
+    to="/dashboard/subscription"
+    onClick={() => setOpen(false)}
+    className="w-full bg-[#E7D487] hover:bg-[#E7D487]/90 transition-all rounded-xl py-2 text-xs font-semibold text-black flex items-center justify-center gap-2"
+  >
+    Upgrade Pro →
+  </Link>
+</div>
       </aside>
     </>
   );
