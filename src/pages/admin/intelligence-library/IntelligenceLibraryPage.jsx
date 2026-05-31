@@ -4,7 +4,7 @@ import GuideCards from '@/components/admin/intelligence-library/GuideCards';
 
 const IntelligenceLibraryPage = () => {
   return (
-    <div className="p-6 space-y-8">
+    <div className="p-4  space-y-4 sm:space-y-8">
       <LibraryBanner />
       <GuideCards />
     </div>

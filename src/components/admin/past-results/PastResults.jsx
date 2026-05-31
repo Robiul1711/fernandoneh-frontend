@@ -14,6 +14,7 @@ import "react-day-picker/style.css";
 // Import assets
 import pattern from "@/assets/images/pattern.png";
 import useClient from "@/hooks/useClient";
+import { JackpotCardSkeleton } from "@/components/shared/Skeleton";
 
 /* -------------------------------------------------------------------------- */
 /*  Inline calendar popover styles (scoped to .rdp-dark-theme)                */
@@ -378,10 +379,8 @@ const PastResults = () => {
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="bg-[#111111] border border-white/5 rounded-[24px] p-6 animate-pulse h-52"
-            />
+            <JackpotCardSkeleton key={i} />
+
           ))}
         </div>
       ) : results.length === 0 ? (

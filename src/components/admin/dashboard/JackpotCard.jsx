@@ -238,7 +238,7 @@ const JackpotCard = ({
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.1 + 0.5 }}
               whileHover={{ scale: 1.05 }}
-              className="flex-1 p-1.5 xl:p-2 aspect-square flex flex-col items-center justify-center bg-[#161616] border border-[#E8AC43]/20 rounded-lg xl:rounded-2xl group-hover:border-[#E8AC43]/40 transition-all"
+              className="flex-1 p-2  flex flex-col items-center justify-center bg-[#161616] border border-[#E8AC43]/20 rounded-lg  group-hover:border-[#E8AC43]/40 transition-all"
             >
               <span className="text-[#E8AC43] text-sm lg:text-lg xl:text-2xl font-bold mb-0.5">{t.value}</span>
               <span className="text-[#E8AC43]/60 text-[8px] xl:text-[10px] font-black tracking-widest">{t.label}</span>
